@@ -93,7 +93,11 @@ function handleCellClick(evt) {
     }
 
     if (!flags[cellIndex]) {
-      revealCell(cellIndex);
+      if (evt.shiftKey) {
+        chordCell(cellIndex);
+      } else {
+        revealCell(cellIndex, false);
+      }
     }
   }
 
@@ -150,23 +154,28 @@ function generateMines(safeCellIndex) {
   }
 }
 
-function revealCell(cellIndex) {
-  const cellValue = boardSolution[cellIndex];
-
-  // Hit a mine!
-  if (cellValue < 0) {
-    boardSolution.forEach((cell, idx) => {
-      if (cell < 0) {
-        board[idx] = cell;
-      }
-    });
+function chordCell(cellIndex) {
+  const cellValue = board[cellIndex];
+  if (!cellValue) {
     return;
   }
 
-  const visitedCells = new Set();
-  revealCells(cellIndex, visitedCells);
+  let flagSum = 0;
+  for (const adjacentIdx of getAdjacentCellIndices(cellIndex)) {
+    if (flags[adjacentIdx]) {
+      ++flagSum;
+    }
+  }
 
-  function revealCells(cellIndex, visitedCells) {
+  if (flagSum === cellValue) {
+    revealCell(cellIndex, true);
+  }
+}
+
+function revealCell(cellIndex, ignoreInitial) {
+  revealCells(cellIndex, new Set(), ignoreInitial);
+
+  function revealCells(cellIndex, visitedCells, ignoreInitial) {
     if (visitedCells.size === visitedCells.add(cellIndex).size) {
       return;
     }
@@ -178,14 +187,24 @@ function revealCell(cellIndex) {
     const cellValue = boardSolution[cellIndex];
     board[cellIndex] = cellValue;
 
+    // Hit a mine!
+    if (cellValue < 0) {
+      boardSolution.forEach((cell, idx) => {
+        if (cell < 0) {
+          board[idx] = cell;
+        }
+      });
+      return;
+    }
+
     // Hit a mine-adjacent cell!
-    if (cellValue > 0) {
+    if (!ignoreInitial && cellValue > 0) {
       return;
     }
 
     // Jackpot!
     for (const adjacentIdx of getAdjacentCellIndices(cellIndex)) {
-      revealCells(adjacentIdx, visitedCells);
+      revealCells(adjacentIdx, visitedCells, false);
     }
   }
 }
