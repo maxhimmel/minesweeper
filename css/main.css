@@ -44,6 +44,9 @@ main {
 .cell:hover {
   filter: saturate(300%);
 }
+.cell:disabled {
+  filter: saturate(30%);
+}
 
 .difficulty {
   display: flex;
