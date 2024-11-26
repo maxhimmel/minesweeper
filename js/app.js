@@ -16,31 +16,59 @@ const DIFFICULTIES = {
   },
 };
 
-const boardElem = document.getElementById("board");
-const cellElems = [];
 const board = [];
 const shuffledIndices = [];
 let hasPlacedMines = false;
+let difficulty = DIFFICULTIES.easy;
 
-// clear board
-boardElem.innerHTML = null;
-hasPlacedMines = false;
+const boardElem = document.getElementById("board");
+const difficultyElem = document.querySelector(".difficulty");
+const cellElems = [];
 
-// generate cells
-const difficulty = DIFFICULTIES.easy;
-boardElem.style.gridTemplateColumns = `repeat(${difficulty.colCount}, 1fr)`;
-for (let idx = 0; idx < difficulty.colCount * difficulty.rowCount; ++idx) {
-  const cellElem = document.createElement("button");
-  cellElem.classList.add("cell");
+init();
 
-  boardElem.append(cellElem);
-  cellElems.push(cellElem);
+function init() {
+  hasPlacedMines = false;
+  board.splice(0, board.length);
+  shuffledIndices.splice(0, shuffledIndices.length);
+  boardElem.innerHTML = null;
+  cellElems.splice(0, cellElems.length);
+  boardElem.style.gridTemplateColumns = `repeat(${difficulty.colCount}, 1fr)`;
 
-  board.push(0);
-  shuffledIndices.push(idx);
+  for (let idx = 0; idx < difficulty.colCount * difficulty.rowCount; ++idx) {
+    board.push(0);
+    shuffledIndices.push(idx);
+
+    const cellElem = document.createElement("button");
+    cellElem.classList.add("cell");
+
+    boardElem.append(cellElem);
+    cellElems.push(cellElem);
+  }
+
+  shuffle(shuffledIndices);
+
+  difficultyElem.removeEventListener("click", handleDifficultyChange);
+  difficultyElem.addEventListener("click", handleDifficultyChange);
+
+  boardElem.removeEventListener("click", handleCellClick);
+  boardElem.addEventListener("click", handleCellClick);
 }
 
-boardElem.addEventListener("click", (evt) => {
+function handleDifficultyChange(evt) {
+  if (!evt.target.matches("input[type='radio']")) {
+    return;
+  }
+
+  const diffKey = evt.target.id;
+  const newDifficulty = DIFFICULTIES[diffKey];
+  if (newDifficulty !== difficulty) {
+    difficulty = newDifficulty;
+    init();
+  }
+}
+
+function handleCellClick(evt) {
   if (!evt.target.classList.contains("cell")) {
     return;
   }
@@ -49,33 +77,35 @@ boardElem.addEventListener("click", (evt) => {
 
   if (!hasPlacedMines) {
     hasPlacedMines = true;
+    generateMines(cellIndex);
+  }
 
-    shuffledIndices.splice(cellIndex, 1); // remove the clicked cell as an option for mines
-    shuffle(shuffledIndices);
+  render();
+}
 
-    for (let mine = 0; mine < difficulty.mineCount; ++mine) {
-      const idx = shuffledIndices[mine];
-      board[idx] = -1;
+function generateMines(safeCellIndex) {
+  shuffledIndices.splice(safeCellIndex, 1);
 
-      // iterate over surrounding cells ...
-      const mineCoord = getCellCoord(idx);
-      for (let col = -1; col <= 1; ++col) {
-        for (let row = -1; row <= 1; ++row) {
-          const adjacentIndex = getCellIndex(
-            mineCoord.col + col,
-            mineCoord.row + row
-          );
+  for (let mine = 0; mine < difficulty.mineCount; ++mine) {
+    const idx = shuffledIndices[mine];
+    board[idx] = -1;
 
-          if (adjacentIndex >= 0 && board[adjacentIndex] >= 0) {
-            ++board[adjacentIndex];
-          }
+    // iterate over surrounding cells ...
+    const mineCoord = getCellCoord(idx);
+    for (let col = -1; col <= 1; ++col) {
+      for (let row = -1; row <= 1; ++row) {
+        const adjacentIndex = getCellIndex(
+          mineCoord.col + col,
+          mineCoord.row + row
+        );
+
+        if (adjacentIndex >= 0 && board[adjacentIndex] >= 0) {
+          ++board[adjacentIndex];
         }
       }
     }
   }
-
-  render();
-});
+}
 
 function render() {
   for (let idx = 0; idx < board.length; ++idx) {
