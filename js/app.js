@@ -223,16 +223,15 @@ function render() {
     const cellElem = cellElems[idx];
     const cellValue = board[idx];
 
-    cellElem.style.backgroundColor = cellValue < 0 ? "red" : "lime";
-
-    cellElem.textContent = "";
+    cellElem.innerHTML = "";
+    cellElem.classList.toggle("pressed", !flags[idx] && cellValue !== null);
 
     if (flags[idx]) {
-      cellElem.textContent = "f";
-    }
-
-    if (cellValue > 0) {
-      cellElem.textContent = cellValue;
+      cellElem.innerHTML = "f";
+    } else if (cellValue > 0) {
+      cellElem.innerHTML = `<div class="mine-${cellValue}">${cellValue}</div>`;
+    } else if (cellValue < 0) {
+      cellElem.innerHTML = `<div class="mine"></div>`;
     }
   }
 

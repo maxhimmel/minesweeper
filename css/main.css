@@ -1,9 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+
 * {
   box-sizing: border-box;
 
   margin: 0;
   padding: 0;
   border: 0;
+
+  font-family: "Open Sans", serif;
 
   color: black;
   background-color: transparent;
@@ -32,21 +36,27 @@ main {
 
 #board {
   display: grid;
-  gap: 0.2rem;
-  padding: 0.2rem;
+  padding: 0.25rem;
+  background-color: grey;
 }
 
 .cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 4dvh;
   height: 4dvh;
-  background-color: aquamarine;
+  background-color: lightgrey;
   font-size: 150%;
+  font-weight: bold;
+  border: 0.35rem outset white;
 }
-.cell:hover {
-  filter: saturate(300%);
+.cell:active:hover {
+  border: 0.25rem inset lightgrey;
 }
-.cell:disabled {
-  filter: saturate(30%);
+
+.pressed {
+  border: 0.25rem inset lightgrey;
 }
 
 .difficulty {
@@ -67,4 +77,40 @@ input[type="radio"]:checked + label {
   color: black;
   background-color: white;
   border: 0.1rem solid black;
+}
+
+.mine-1 {
+  color: dodgerblue;
+}
+.mine-2 {
+  color: forestgreen;
+}
+.mine-3 {
+  color: crimson;
+}
+.mine-4 {
+  color: darkorchid;
+}
+.mine-5 {
+  color: chocolate;
+}
+.mine-6 {
+  color: teal;
+}
+.mine-7 {
+  color: black;
+}
+.mine-8 {
+  color: grey;
+}
+
+.mine {
+  border-radius: 50%;
+  background-color: black;
+  width: 50%;
+  height: 50%;
+}
+
+.cell:has(.mine) {
+  background-color: red;
 }
