@@ -229,7 +229,7 @@ function render() {
     if (flags[idx]) {
       cellElem.innerHTML = "f";
     } else if (cellValue > 0) {
-      cellElem.innerHTML = `<div class="mine-${cellValue}">${cellValue}</div>`;
+      cellElem.innerHTML = `<div class="mine-${cellValue} ignore-mouse">${cellValue}</div>`;
     } else if (cellValue < 0) {
       cellElem.innerHTML = `<div class="mine"></div>`;
     }

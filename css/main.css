@@ -114,3 +114,7 @@ input[type="radio"]:checked + label {
 .cell:has(.mine) {
   background-color: red;
 }
+
+.ignore-mouse {
+  pointer-events: none;
+}
