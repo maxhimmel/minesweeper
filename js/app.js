@@ -30,6 +30,7 @@ const difficultyElem = document.querySelector(".difficulty");
 const cellElems = [];
 const flagsElem = document.getElementById("flags");
 const timerElem = document.getElementById("timer");
+const resetBtn = document.getElementById("reset");
 
 init();
 
@@ -62,6 +63,9 @@ function init() {
 
   boardElem.removeEventListener("click", handleCellClick);
   boardElem.addEventListener("click", handleCellClick);
+
+  resetBtn.removeEventListener("click", init);
+  resetBtn.addEventListener("click", init);
 
   render();
 }
