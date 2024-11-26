@@ -1,0 +1,66 @@
+* {
+  box-sizing: border-box;
+
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  color: black;
+  background-color: transparent;
+
+  transition: all 150ms;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem;
+  gap: 2rem;
+}
+
+main {
+  background-color: aliceblue;
+}
+
+#controls {
+  display: flex;
+  justify-content: space-between;
+  background-color: antiquewhite;
+}
+
+#board {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.2rem;
+}
+
+.cell {
+  width: 4dvh;
+  height: 4dvh;
+  background-color: aquamarine;
+  font-size: 150%;
+}
+.cell:hover {
+  filter: saturate(300%);
+}
+
+.difficulty {
+  display: flex;
+  gap: 1rem;
+}
+
+input[type="radio"] + label {
+  color: white;
+  background-color: black;
+  padding: 1rem;
+  border-radius: 2rem;
+  border: 0.1rem solid transparent;
+  cursor: pointer;
+}
+
+input[type="radio"]:checked + label {
+  color: black;
+  background-color: white;
+  border: 0.1rem solid black;
+}
