@@ -22,10 +22,14 @@ const boardSolution = [];
 const shuffledIndices = [];
 let hasPlacedMines = false;
 let difficulty = DIFFICULTIES.easy;
+let timerUpdater = null;
+let seconds = 0;
 
 const boardElem = document.getElementById("board");
 const difficultyElem = document.querySelector(".difficulty");
 const cellElems = [];
+const flagsElem = document.getElementById("flags");
+const timerElem = document.getElementById("timer");
 
 init();
 
@@ -38,6 +42,8 @@ function init() {
   boardElem.innerHTML = null;
   cellElems.splice(0, cellElems.length);
   boardElem.style.gridTemplateColumns = `repeat(${difficulty.colCount}, 1fr)`;
+  seconds = 0;
+  clearTimeout(timerUpdater);
 
   for (let idx = 0; idx < difficulty.colCount * difficulty.rowCount; ++idx) {
     board.push(null);
@@ -81,6 +87,7 @@ function handleCellClick(evt) {
   if (!tryHandleFlagToggle(evt, cellIndex)) {
     if (!hasPlacedMines) {
       generateMines(cellIndex);
+      startTimer();
     }
 
     if (!flags[cellIndex]) {
@@ -109,6 +116,13 @@ function tryHandleFlagToggle(evt, cellIndex) {
   }
 
   return true;
+}
+
+function startTimer() {
+  timerUpdater = setInterval(() => {
+    ++seconds;
+    timerElem.textContent = `${seconds}`.padStart(3, "0");
+  }, 1000);
 }
 
 function generateMines(safeCellIndex) {
@@ -179,8 +193,6 @@ function render() {
     const cellElem = cellElems[idx];
     const cellValue = board[idx];
 
-    cellElem.toggleAttribute("disabled", cellValue !== null && !flags[idx]);
-
     cellElem.style.backgroundColor = cellValue < 0 ? "red" : "lime";
 
     cellElem.textContent = "";
@@ -193,6 +205,11 @@ function render() {
       cellElem.textContent = cellValue;
     }
   }
+
+  flagsElem.textContent = `${
+    difficulty.mineCount - Object.keys(flags).length
+  }`.padStart(3, "0");
+  timerElem.textContent = `${seconds}`.padStart(3, "0");
 }
 
 /* --- helpers --- */

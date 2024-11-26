@@ -27,6 +27,7 @@ main {
   display: flex;
   justify-content: space-between;
   background-color: antiquewhite;
+  font-family: monospace;
 }
 
 #board {
