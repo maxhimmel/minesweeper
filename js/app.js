@@ -62,6 +62,8 @@ function init() {
 
   boardElem.removeEventListener("click", handleCellClick);
   boardElem.addEventListener("click", handleCellClick);
+
+  render();
 }
 
 function handleDifficultyChange(evt) {
