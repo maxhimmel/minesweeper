@@ -154,6 +154,7 @@ function generateMines(safeCellIndex) {
   }
 }
 
+// Why name it "chord"? https://en.wikipedia.org/wiki/Chording#Minesweeper_tactic
 function chordCell(cellIndex) {
   const cellValue = board[cellIndex];
   if (!cellValue) {
