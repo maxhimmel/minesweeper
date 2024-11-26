@@ -17,6 +17,8 @@ const DIFFICULTIES = {
 };
 
 const board = [];
+let flags = {};
+const boardSolution = [];
 const shuffledIndices = [];
 let hasPlacedMines = false;
 let difficulty = DIFFICULTIES.easy;
@@ -30,13 +32,16 @@ init();
 function init() {
   hasPlacedMines = false;
   board.splice(0, board.length);
+  boardSolution.splice(0, boardSolution.length);
+  flags = {};
   shuffledIndices.splice(0, shuffledIndices.length);
   boardElem.innerHTML = null;
   cellElems.splice(0, cellElems.length);
   boardElem.style.gridTemplateColumns = `repeat(${difficulty.colCount}, 1fr)`;
 
   for (let idx = 0; idx < difficulty.colCount * difficulty.rowCount; ++idx) {
-    board.push(0);
+    board.push(null);
+    boardSolution.push(0);
     shuffledIndices.push(idx);
 
     const cellElem = document.createElement("button");
@@ -45,8 +50,6 @@ function init() {
     boardElem.append(cellElem);
     cellElems.push(cellElem);
   }
-
-  shuffle(shuffledIndices);
 
   difficultyElem.removeEventListener("click", handleDifficultyChange);
   difficultyElem.addEventListener("click", handleDifficultyChange);
@@ -75,34 +78,94 @@ function handleCellClick(evt) {
 
   const cellIndex = cellElems.indexOf(evt.target);
 
-  if (!hasPlacedMines) {
-    hasPlacedMines = true;
-    generateMines(cellIndex);
+  if (!tryHandleFlagToggle(evt, cellIndex)) {
+    if (!hasPlacedMines) {
+      generateMines(cellIndex);
+    }
+
+    if (!flags[cellIndex]) {
+      revealCell(cellIndex);
+    }
   }
 
   render();
 }
 
+function tryHandleFlagToggle(evt, cellIndex) {
+  if (!evt.altKey) {
+    return false;
+  }
+
+  if (flags[cellIndex]) {
+    delete flags[cellIndex];
+    if (board.length > 0) {
+      board[cellIndex] = null;
+    }
+  } else {
+    flags[cellIndex] = true;
+    if (board.length > 0) {
+      board[cellIndex] = -1;
+    }
+  }
+
+  return true;
+}
+
 function generateMines(safeCellIndex) {
-  shuffledIndices.splice(safeCellIndex, 1);
+  hasPlacedMines = true;
+  flags = {};
+
+  // shuffledIndices.splice(safeCellIndex, 1);
+  // shuffle(shuffledIndices);
 
   for (let mine = 0; mine < difficulty.mineCount; ++mine) {
     const idx = shuffledIndices[mine];
-    board[idx] = -1;
+    boardSolution[idx] = -1;
 
-    // iterate over surrounding cells ...
-    const mineCoord = getCellCoord(idx);
-    for (let col = -1; col <= 1; ++col) {
-      for (let row = -1; row <= 1; ++row) {
-        const adjacentIndex = getCellIndex(
-          mineCoord.col + col,
-          mineCoord.row + row
-        );
-
-        if (adjacentIndex >= 0 && board[adjacentIndex] >= 0) {
-          ++board[adjacentIndex];
-        }
+    for (const adjacentIdx of getAdjacentCellIndices(idx)) {
+      if (boardSolution[adjacentIdx] >= 0) {
+        ++boardSolution[adjacentIdx];
       }
+    }
+  }
+}
+
+function revealCell(cellIndex) {
+  const cellValue = boardSolution[cellIndex];
+
+  // Hit a mine!
+  if (cellValue < 0) {
+    boardSolution.forEach((cell, idx) => {
+      if (cell < 0) {
+        board[idx] = cell;
+      }
+    });
+    return;
+  }
+
+  const visitedCells = new Set();
+  revealCells(cellIndex, visitedCells);
+
+  function revealCells(cellIndex, visitedCells) {
+    if (visitedCells.size === visitedCells.add(cellIndex).size) {
+      return;
+    }
+
+    if (flags[cellIndex]) {
+      return;
+    }
+
+    const cellValue = boardSolution[cellIndex];
+    board[cellIndex] = cellValue;
+
+    // Hit a mine-adjacent cell!
+    if (cellValue > 0) {
+      return;
+    }
+
+    // Jackpot!
+    for (const adjacentIdx of getAdjacentCellIndices(cellIndex)) {
+      revealCells(adjacentIdx, visitedCells);
     }
   }
 }
@@ -112,7 +175,15 @@ function render() {
     const cellElem = cellElems[idx];
     const cellValue = board[idx];
 
+    cellElem.toggleAttribute("disabled", cellValue !== null && !flags[idx]);
+
     cellElem.style.backgroundColor = cellValue < 0 ? "red" : "lime";
+
+    cellElem.textContent = "";
+
+    if (flags[idx]) {
+      cellElem.textContent = "f";
+    }
 
     if (cellValue > 0) {
       cellElem.textContent = cellValue;
@@ -147,4 +218,23 @@ function getCellIndex(col, row) {
   }
 
   return col + row * difficulty.colCount;
+}
+
+function* getAdjacentCellIndices(cellIndex, includeSelf = false) {
+  const cellCoord = getCellCoord(cellIndex);
+  for (let col = -1; col <= 1; ++col) {
+    for (let row = -1; row <= 1; ++row) {
+      if (!includeSelf && col === 0 && row === 0) {
+        continue;
+      }
+
+      const adjacentIndex = getCellIndex(
+        cellCoord.col + col,
+        cellCoord.row + row
+      );
+      if (adjacentIndex >= 0) {
+        yield adjacentIndex;
+      }
+    }
+  }
 }
