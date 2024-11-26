@@ -49,3 +49,7 @@
 ## Wireframe
 
 <img src="./images/Minesweeper Wireframe.svg" style="background-color: white" alt="wireframe"/>
+
+## Resources
+
+[Sprite Sheet](https://www.spriters-resource.com/pc_computer/minesweeper/sheet/19849/)
