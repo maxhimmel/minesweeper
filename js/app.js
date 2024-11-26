@@ -115,8 +115,8 @@ function generateMines(safeCellIndex) {
   hasPlacedMines = true;
   flags = {};
 
-  // shuffledIndices.splice(safeCellIndex, 1);
-  // shuffle(shuffledIndices);
+  shuffledIndices.splice(safeCellIndex, 1);
+  shuffle(shuffledIndices);
 
   for (let mine = 0; mine < difficulty.mineCount; ++mine) {
     const idx = shuffledIndices[mine];
