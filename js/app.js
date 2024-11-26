@@ -115,7 +115,11 @@ function generateMines(safeCellIndex) {
   hasPlacedMines = true;
   flags = {};
 
-  shuffledIndices.splice(safeCellIndex, 1);
+  // remove a pocket of cells from mine selection ...
+  for (const adjacentIdx of getAdjacentCellIndices(safeCellIndex, true)) {
+    const index = shuffledIndices.indexOf(adjacentIdx);
+    shuffledIndices.splice(index, 1);
+  }
   shuffle(shuffledIndices);
 
   for (let mine = 0; mine < difficulty.mineCount; ++mine) {
