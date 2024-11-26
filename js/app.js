@@ -102,7 +102,7 @@ function shuffle(array) {
 function getCellCoord(index) {
   return {
     col: index % difficulty.colCount,
-    row: Math.floor(index / difficulty.rowCount),
+    row: Math.floor(index / difficulty.colCount),
   };
 }
 
@@ -116,5 +116,5 @@ function getCellIndex(col, row) {
     return -1;
   }
 
-  return col + row * difficulty.rowCount;
+  return col + row * difficulty.colCount;
 }
