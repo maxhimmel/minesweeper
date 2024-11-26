@@ -113,6 +113,10 @@ function tryHandleFlagToggle(evt, cellIndex) {
     return false;
   }
 
+  if (board[cellIndex] !== null) {
+    return;
+  }
+
   if (flags[cellIndex]) {
     delete flags[cellIndex];
     if (board.length > 0) {
