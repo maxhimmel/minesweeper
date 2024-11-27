@@ -46,9 +46,9 @@ body {
 
 #controls {
   justify-content: space-between;
-  align-items: center;
+  /* align-items: center; */
   width: 100%;
-  padding: 0 0.25rem;
+  padding: 0 0.2rem;
 }
 
 #controls * {
