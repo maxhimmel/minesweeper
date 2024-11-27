@@ -26,7 +26,7 @@ let timerUpdater = null;
 let seconds = 0;
 let isFlagPreviewMode = false;
 let flagPreviewIndex = -1;
-let isGameOver = false;
+let gameState = "PLAYING";
 
 const boardElem = document.getElementById("board");
 const difficultyElem = document.querySelector(".difficulty");
@@ -38,7 +38,7 @@ const resetBtn = document.getElementById("reset");
 init();
 
 function init() {
-  isGameOver = false;
+  gameState = "PLAYING";
   hasPlacedMines = false;
   board.splice(0, board.length);
   boardSolution.splice(0, boardSolution.length);
@@ -155,12 +155,10 @@ function handleCellClick(evt) {
       } else {
         revealCell(cellIndex, false);
       }
-
-      if (isGameOver) {
-        handleGameOver();
-      }
     }
   }
+
+  handleGameOver();
 
   render();
 }
@@ -258,7 +256,7 @@ function revealCell(cellIndex, ignoreInitial) {
 
     // Hit a mine!
     if (cellValue < 0) {
-      isGameOver = true;
+      gameState = "LOSE";
       return;
     }
 
@@ -275,11 +273,28 @@ function revealCell(cellIndex, ignoreInitial) {
 }
 
 function handleGameOver() {
-  boardSolution.forEach((cell, idx) => {
-    if (cell < 0) {
-      board[idx] = cell;
+  if (gameState === "PLAYING") {
+    for (let idx = 0; idx < boardSolution.length; ++idx) {
+      const lhs = board[idx];
+      const rhs = boardSolution[idx];
+
+      if (lhs !== rhs) {
+        // Board doesn't match solution, so we're still playing ...
+        return;
+      }
     }
-  });
+
+    gameState = "WIN";
+  } else if (gameState === "LOSE") {
+    boardSolution.forEach((cell, idx) => {
+      if (cell < 0) {
+        board[idx] = cell;
+      }
+    });
+  }
+
+  clearTimeout(timerUpdater);
+  boardElem.removeEventListener("click", handleCellClick);
 }
 
 function render() {
@@ -303,6 +318,9 @@ function render() {
     difficulty.mineCount - Object.keys(flags).length
   }`.padStart(3, "0");
   timerElem.textContent = `${seconds}`.padStart(3, "0");
+
+  resetBtn.innerText =
+    gameState === "PLAYING" ? "🙂" : gameState === "WIN" ? "😎" : "😵";
 }
 
 /* --- helpers --- */
