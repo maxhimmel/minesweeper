@@ -133,6 +133,21 @@ input[type="radio"]:checked + label {
   background-color: red;
 }
 
+.flag {
+  width: 2.65dvh;
+  height: 2.65dvh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-image: url("../images/flag.svg");
+}
+
 .ignore-mouse {
   pointer-events: none;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }

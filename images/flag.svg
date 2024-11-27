@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="283.3918 181.4198 36.402 49.625" width="36.402px" height="49.625px">
+    <g id="object-0" transform="matrix(1, 0, 0, 1, 264.0168151855469, 167.5448455810547)">
+        <polygon points="35.999,55.5 35.999,16.5 40,16.5 40,55.5 35.999,55.5 &#9;&#9;"/>
+        <polygon fill="#FF0000" points="40,13.875 19.375,27 40,40.125 &#9;&#9;"/>
+        <rect x="28.571" y="51.625" width="18.857" height="5.5"/>
+        <rect x="20.222" y="56.459" width="35.555" height="7.041"/>
+    </g>
+</svg>
