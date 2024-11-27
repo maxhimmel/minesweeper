@@ -30,6 +30,7 @@ let seconds = 0;
 let isFlagPreviewMode = false;
 let flagPreviewIndex = -1;
 let gameState = "PLAYING";
+let losingCellIndex = -1;
 
 const boardElem = document.getElementById("board");
 const difficultyElem = document.getElementById("difficulty");
@@ -44,6 +45,7 @@ init();
 function init() {
   gameState = "PLAYING";
   hasPlacedMines = false;
+  losingCellIndex = -1;
   board.splice(0, board.length);
   boardSolution.splice(0, boardSolution.length);
   flags = {};
@@ -171,6 +173,7 @@ function handleCellClick(evt) {
   }
 
   const cellIndex = cellElems.indexOf(evt.target);
+  losingCellIndex = cellIndex;
 
   if (!tryHandleFlagToggle(evt, cellIndex)) {
     if (!hasPlacedMines) {
@@ -341,6 +344,11 @@ function render() {
     } else if (cellValue < 0) {
       cellElem.innerHTML = getMineIcon();
     }
+  }
+
+  if (gameState === "LOSE") {
+    const losingElem = cellElems[losingCellIndex];
+    losingElem.style = "background-color: yellow";
   }
 
   flagsElem.textContent = `${
