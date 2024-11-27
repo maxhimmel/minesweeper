@@ -1,3 +1,4 @@
+// CONSTANTS
 const DIFFICULTIES = {
   easy: {
     rowCount: 9,
@@ -19,6 +20,7 @@ const WIN_FACES = ["🤠", "😎", "🥳"];
 const LOSE_FACES = ["🫠", "😵", "🤯"];
 const GUESS_FACES = ["😮", "😲", "🧐"];
 
+// STATE
 const board = [];
 let flags = {};
 const boardSolution = [];
@@ -32,6 +34,7 @@ let flagPreviewIndex = -1;
 let gameState = "PLAYING";
 let losingCellIndex = -1;
 
+// DOM ELEMENTS
 const boardElem = document.getElementById("board");
 const difficultyElem = document.getElementById("difficulty");
 const cellElems = [];
@@ -40,8 +43,23 @@ const timerElem = document.getElementById("timer");
 const timerIconElem = document.querySelector("#timer + div");
 const resetBtn = document.getElementById("reset");
 
-init();
+// APP
 
+resetBtn.addEventListener("click", init);
+difficultyElem.addEventListener("click", (evt) => {
+  if (!evt.target.matches("[name='difficulty']")) {
+    return;
+  }
+
+  const diffKey = evt.target.id;
+  const newDifficulty = DIFFICULTIES[diffKey];
+  if (newDifficulty !== difficulty) {
+    difficulty = newDifficulty;
+    init();
+  }
+});
+
+init();
 function init() {
   gameState = "PLAYING";
   hasPlacedMines = false;
@@ -69,102 +87,10 @@ function init() {
     cellElems.push(cellElem);
   }
 
-  resetBtn.removeEventListener("click", init);
-  resetBtn.addEventListener("click", init);
-
-  difficultyElem.removeEventListener("click", handleDifficultyChange);
-  difficultyElem.addEventListener("click", handleDifficultyChange);
-
-  window.removeEventListener("keydown", handleFlagPreviewMode);
-  window.addEventListener("keydown", handleFlagPreviewMode);
-  window.removeEventListener("keyup", handleFlagPreviewMode);
-  window.addEventListener("keyup", handleFlagPreviewMode);
-
-  boardElem.removeEventListener("mouseover", handleFlagPreviewSelection);
-  boardElem.addEventListener("mouseover", handleFlagPreviewSelection);
-  boardElem.removeEventListener("mouseout", handleFlagPreviewSelection);
-  boardElem.addEventListener("mouseout", handleFlagPreviewSelection);
-
-  window.removeEventListener("mousedown", renderGuessFace);
-  window.addEventListener("mousedown", renderGuessFace);
-  window.removeEventListener("mouseup", renderGuessFace);
-  window.addEventListener("mouseup", renderGuessFace);
-
   boardElem.removeEventListener("click", handleCellClick);
   boardElem.addEventListener("click", handleCellClick);
 
   render();
-}
-
-function handleFlagPreviewMode(evt) {
-  if (evt.key === "Alt") {
-    if (evt.type === "keydown") {
-      isFlagPreviewMode = true;
-    } else if (evt.type === "keyup") {
-      isFlagPreviewMode = false;
-    }
-
-    renderFlagPreview(isFlagPreviewMode, flagPreviewIndex);
-  }
-}
-
-function handleFlagPreviewSelection(evt) {
-  if (evt.target.classList.contains("cell")) {
-    const cellIndex = cellElems.indexOf(evt.target);
-
-    if (evt.type === "mouseover") {
-      flagPreviewIndex = cellIndex;
-      renderFlagPreview(isFlagPreviewMode, flagPreviewIndex);
-    } else if (evt.type === "mouseout") {
-      renderFlagPreview(false, flagPreviewIndex);
-      flagPreviewIndex = -1;
-    }
-  }
-}
-
-function renderFlagPreview(requestPreview, cellIndex) {
-  if (cellIndex < 0) {
-    return;
-  }
-
-  if (board[cellIndex] !== null || flags[cellIndex]) {
-    return;
-  }
-
-  const element = cellElems[cellIndex];
-  element.innerHTML = requestPreview ? getFlagIcon() : "";
-}
-
-function handleDifficultyChange(evt) {
-  if (!evt.target.matches("input[type='radio']")) {
-    return;
-  }
-
-  const diffKey = evt.target.id;
-  const newDifficulty = DIFFICULTIES[diffKey];
-  if (newDifficulty !== difficulty) {
-    difficulty = newDifficulty;
-    init();
-  }
-}
-
-function renderGuessFace(evt) {
-  if (evt.altKey || evt.shiftKey) {
-    return;
-  }
-
-  if (gameState !== "PLAYING") {
-    return;
-  }
-
-  const isClickingBoard =
-    evt.type === "mousedown" && evt.target.matches("#board, .cell");
-
-  if (isClickingBoard) {
-    resetBtn.innerText = getRandomItem(GUESS_FACES);
-  } else if (evt.type === "mouseup") {
-    resetBtn.innerText = "🙂";
-  }
 }
 
 function handleCellClick(evt) {
@@ -374,6 +300,73 @@ function render() {
       : gameState === "WIN"
       ? getRandomItem(WIN_FACES)
       : getRandomItem(LOSE_FACES);
+}
+
+initPreviewRendering();
+function initPreviewRendering() {
+  window.addEventListener("keydown", handleFlagPreviewMode);
+  window.addEventListener("keyup", handleFlagPreviewMode);
+  function handleFlagPreviewMode(evt) {
+    if (evt.key === "Alt") {
+      if (evt.type === "keydown") {
+        isFlagPreviewMode = true;
+      } else if (evt.type === "keyup") {
+        isFlagPreviewMode = false;
+      }
+
+      renderFlagPreview(isFlagPreviewMode, flagPreviewIndex);
+    }
+  }
+
+  boardElem.addEventListener("mouseover", handleFlagPreviewSelection);
+  boardElem.addEventListener("mouseout", handleFlagPreviewSelection);
+  function handleFlagPreviewSelection(evt) {
+    if (evt.target.classList.contains("cell")) {
+      const cellIndex = cellElems.indexOf(evt.target);
+
+      if (evt.type === "mouseover") {
+        flagPreviewIndex = cellIndex;
+        renderFlagPreview(isFlagPreviewMode, flagPreviewIndex);
+      } else if (evt.type === "mouseout") {
+        renderFlagPreview(false, flagPreviewIndex);
+        flagPreviewIndex = -1;
+      }
+    }
+  }
+
+  function renderFlagPreview(requestPreview, cellIndex) {
+    if (cellIndex < 0) {
+      return;
+    }
+
+    if (board[cellIndex] !== null || flags[cellIndex]) {
+      return;
+    }
+
+    const element = cellElems[cellIndex];
+    element.innerHTML = requestPreview ? getFlagIcon() : "";
+  }
+
+  window.addEventListener("mousedown", renderGuessFace);
+  window.addEventListener("mouseup", renderGuessFace);
+  function renderGuessFace(evt) {
+    if (evt.altKey || evt.shiftKey) {
+      return;
+    }
+
+    if (gameState !== "PLAYING") {
+      return;
+    }
+
+    const isClickingBoard =
+      evt.type === "mousedown" && evt.target.matches("#board, .cell");
+
+    if (isClickingBoard) {
+      resetBtn.innerText = getRandomItem(GUESS_FACES);
+    } else if (evt.type === "mouseup") {
+      resetBtn.innerText = "🙂";
+    }
+  }
 }
 
 /* --- helpers --- */
