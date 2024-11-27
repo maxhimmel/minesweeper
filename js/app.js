@@ -44,7 +44,6 @@ const timerIconElem = document.querySelector("#timer + div");
 const resetBtn = document.getElementById("reset");
 
 // APP
-
 resetBtn.addEventListener("click", init);
 difficultyElem.addEventListener("click", (evt) => {
   if (!evt.target.matches("[name='difficulty']")) {
