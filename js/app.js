@@ -202,13 +202,13 @@ function tryHandleFlagToggle(evt, cellIndex) {
     if (flags[cellIndex]) {
       // remove flag ...
       delete flags[cellIndex];
-      if (board.length > 0) {
+      if (hasPlacedMines) {
         board[cellIndex] = null;
       }
     } else {
       // set flag ...
       flags[cellIndex] = true;
-      if (board.length > 0) {
+      if (hasPlacedMines) {
         board[cellIndex] = -1;
       }
     }
