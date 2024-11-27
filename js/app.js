@@ -351,8 +351,10 @@ function render() {
     losingElem.style = "background-color: yellow";
 
     for (const idx in flags) {
-      const cellElem = cellElems[idx];
-      cellElem.innerHTML = "❌";
+      if (boardSolution[idx] !== -1) {
+        const cellElem = cellElems[idx];
+        cellElem.innerHTML = "❌";
+      }
     }
   }
 
