@@ -36,6 +36,7 @@ const difficultyElem = document.getElementById("difficulty");
 const cellElems = [];
 const flagsElem = document.getElementById("flags");
 const timerElem = document.getElementById("timer");
+const timerIconElem = document.querySelector("#timer + div");
 const resetBtn = document.getElementById("reset");
 
 init();
@@ -52,6 +53,7 @@ function init() {
   boardElem.style.gridTemplateColumns = `repeat(${difficulty.colCount}, 1fr)`;
   seconds = 0;
   clearTimeout(timerUpdater);
+  timerIconElem.className = "timer-unset";
 
   for (let idx = 0; idx < difficulty.colCount * difficulty.rowCount; ++idx) {
     board.push(null);
@@ -345,6 +347,11 @@ function render() {
     difficulty.mineCount - Object.keys(flags).length
   }`.padStart(3, "0");
   timerElem.textContent = `${seconds}`.padStart(3, "0");
+  timerIconElem.className = !hasPlacedMines
+    ? "icon timer-unset"
+    : gameState !== "PLAYING"
+    ? "icon timer-done"
+    : "icon timer-tick";
 
   resetBtn.innerText =
     gameState === "PLAYING"
@@ -412,7 +419,7 @@ function* getAdjacentCellIndices(cellIndex, includeSelf = false) {
 }
 
 function getFlagIcon() {
-  return `<div class="flag ignore-mouse"></div>`;
+  return `<div class="flag icon ignore-mouse"></div>`;
 }
 
 function getMineIcon() {

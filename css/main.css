@@ -48,6 +48,7 @@ body {
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  padding: 0 0.25rem;
 }
 
 #controls * {
@@ -134,12 +135,27 @@ input[type="radio"]:checked + label {
 }
 
 .flag {
+  background-image: url("../images/flag.svg");
+}
+
+.timer-unset {
+  background-image: url("../images/timer-unset.svg");
+}
+
+.timer-tick {
+  background-image: url("../images/timer-tick.svg");
+}
+
+.timer-done {
+  background-image: url("../images/timer-done.svg");
+}
+
+.icon {
   width: 2.65dvh;
   height: 2.65dvh;
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
-  background-image: url("../images/flag.svg");
 }
 
 .ignore-mouse {
