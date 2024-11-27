@@ -78,6 +78,11 @@ function init() {
   boardElem.removeEventListener("mouseout", handleFlagPreviewSelection);
   boardElem.addEventListener("mouseout", handleFlagPreviewSelection);
 
+  window.removeEventListener("mousedown", renderGuessFace);
+  window.addEventListener("mousedown", renderGuessFace);
+  window.removeEventListener("mouseup", renderGuessFace);
+  window.addEventListener("mouseup", renderGuessFace);
+
   boardElem.removeEventListener("click", handleCellClick);
   boardElem.addEventListener("click", handleCellClick);
 
@@ -133,6 +138,25 @@ function handleDifficultyChange(evt) {
   if (newDifficulty !== difficulty) {
     difficulty = newDifficulty;
     init();
+  }
+}
+
+function renderGuessFace(evt) {
+  if (evt.altKey || evt.shiftKey) {
+    return;
+  }
+
+  if (gameState !== "PLAYING") {
+    return;
+  }
+
+  const isClickingBoard =
+    evt.type === "mousedown" && evt.target.matches("#board, .cell");
+
+  if (isClickingBoard) {
+    resetBtn.innerText = "😲";
+  } else if (evt.type === "mouseup") {
+    resetBtn.innerText = "🙂";
   }
 }
 

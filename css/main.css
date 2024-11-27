@@ -9,7 +9,7 @@
 
   font-family: monospace, serif;
 
-  color: black;
+  color: var(--face-color-content);
   background-color: transparent;
 
   transition: all 150ms;
@@ -25,7 +25,6 @@ body {
   flex-direction: column;
   align-items: center;
   padding: 3rem;
-  gap: 2rem;
   background-color: var(--face-color);
 }
 
@@ -52,13 +51,12 @@ body {
 }
 
 #controls * {
-  font-family: monospace;
   font-size: 2rem;
-  background-color: red;
 }
 
 #board {
   display: grid;
+  background-color: var(--face-color);
   border: 0.5rem inset var(--border-color);
 }
 
@@ -81,17 +79,22 @@ body {
   border: 0.25rem inset var(--pressed-color);
 }
 
+.btn,
 input[type="radio"] + label {
-  color: var(--face-color-content);
   background-color: var(--face-color);
   padding: 1rem;
   border: 0.35rem outset var(--border-color);
   cursor: pointer;
 }
 
+.btn:active:hover,
 input[type="radio"]:checked + label {
   background-color: var(--pressed-color);
   border: 0.35rem inset var(--pressed-color);
+}
+
+#reset {
+  padding: 0 0.25rem;
 }
 
 .mine-1 {
