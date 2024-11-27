@@ -10,7 +10,7 @@
     <script defer src="js/app.js"></script>
   </head>
   <body class="pattern-rain">
-    <header class="container">
+    <main class="container">
       <h1>Minesweeper</h1>
       <section id="difficulty" class="sub-container">
         <input type="radio" id="easy" name="difficulty" checked hidden />
@@ -20,15 +20,15 @@
         <input type="radio" id="hard" name="difficulty" hidden />
         <label for="hard">Expert</label>
       </section>
-    </header>
 
-    <main class="container">
-      <section id="controls" class="sub-container">
-        <div id="flags">99</div>
-        <button id="reset">{reset}</button>
-        <div id="timer">0</div>
+      <section class="container">
+        <div id="controls" class="sub-container">
+          <div id="flags">99</div>
+          <button id="reset">{reset}</button>
+          <div id="timer">0</div>
+        </div>
+        <div id="board"></div>
       </section>
-      <section id="board"></section>
     </main>
   </body>
 </html>

@@ -7,7 +7,7 @@
   padding: 0;
   border: 0;
 
-  font-family: "Open Sans", serif;
+  font-family: monospace, serif;
 
   color: black;
   background-color: transparent;
@@ -41,15 +41,14 @@ body {
 
 .sub-container {
   display: flex;
-  flex-shrink: 0;
   background-color: var(--pressed-color);
   border: 0.5rem inset var(--border-color);
-  width: 100%;
 }
 
 #controls {
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 
 #controls * {
