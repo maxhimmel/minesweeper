@@ -128,7 +128,7 @@ function renderFlagPreview(requestPreview, cellIndex) {
   }
 
   const element = cellElems[cellIndex];
-  element.innerHTML = requestPreview ? "f" : "";
+  element.innerHTML = requestPreview ? getFlagIcon() : "";
 }
 
 function handleDifficultyChange(evt) {
@@ -333,11 +333,11 @@ function render() {
     cellElem.classList.toggle("pressed", !flags[idx] && cellValue !== null);
 
     if (flags[idx]) {
-      cellElem.innerHTML = "f";
+      cellElem.innerHTML = getFlagIcon();
     } else if (cellValue > 0) {
-      cellElem.innerHTML = `<div class="mine-${cellValue} ignore-mouse">${cellValue}</div>`;
+      cellElem.innerHTML = getAdjacentMineIcon(cellValue);
     } else if (cellValue < 0) {
-      cellElem.innerHTML = `<div class="mine"></div>`;
+      cellElem.innerHTML = getMineIcon();
     }
   }
 
@@ -409,4 +409,16 @@ function* getAdjacentCellIndices(cellIndex, includeSelf = false) {
       }
     }
   }
+}
+
+function getFlagIcon() {
+  return `<div class="flag ignore-mouse"></div>`;
+}
+
+function getMineIcon() {
+  return `<div class="mine"></div>`;
+}
+
+function getAdjacentMineIcon(adjacencyCount) {
+  return `<div class="mine-${adjacencyCount} ignore-mouse">${adjacencyCount}</div>`;
 }
