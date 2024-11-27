@@ -349,6 +349,11 @@ function render() {
   if (gameState === "LOSE") {
     const losingElem = cellElems[losingCellIndex];
     losingElem.style = "background-color: yellow";
+
+    for (const idx in flags) {
+      const cellElem = cellElems[idx];
+      cellElem.innerHTML = "❌";
+    }
   }
 
   flagsElem.textContent = `${
