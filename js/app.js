@@ -24,6 +24,8 @@ let hasPlacedMines = false;
 let difficulty = DIFFICULTIES.easy;
 let timerUpdater = null;
 let seconds = 0;
+let isFlagPreviewMode = false;
+let flagPreviewIndex = -1;
 
 const boardElem = document.getElementById("board");
 const difficultyElem = document.querySelector(".difficulty");
@@ -58,16 +60,65 @@ function init() {
     cellElems.push(cellElem);
   }
 
+  resetBtn.removeEventListener("click", init);
+  resetBtn.addEventListener("click", init);
+
   difficultyElem.removeEventListener("click", handleDifficultyChange);
   difficultyElem.addEventListener("click", handleDifficultyChange);
+
+  window.removeEventListener("keydown", handleFlagPreviewMode);
+  window.addEventListener("keydown", handleFlagPreviewMode);
+  window.removeEventListener("keyup", handleFlagPreviewMode);
+  window.addEventListener("keyup", handleFlagPreviewMode);
+
+  boardElem.removeEventListener("mouseover", handleFlagPreviewSelection);
+  boardElem.addEventListener("mouseover", handleFlagPreviewSelection);
+  boardElem.removeEventListener("mouseout", handleFlagPreviewSelection);
+  boardElem.addEventListener("mouseout", handleFlagPreviewSelection);
 
   boardElem.removeEventListener("click", handleCellClick);
   boardElem.addEventListener("click", handleCellClick);
 
-  resetBtn.removeEventListener("click", init);
-  resetBtn.addEventListener("click", init);
-
   render();
+}
+
+function handleFlagPreviewMode(evt) {
+  if (evt.key === "Alt") {
+    if (evt.type === "keydown") {
+      isFlagPreviewMode = true;
+    } else if (evt.type === "keyup") {
+      isFlagPreviewMode = false;
+    }
+
+    renderFlagPreview(isFlagPreviewMode, flagPreviewIndex);
+  }
+}
+
+function handleFlagPreviewSelection(evt) {
+  if (evt.target.classList.contains("cell")) {
+    const cellIndex = cellElems.indexOf(evt.target);
+
+    if (evt.type === "mouseover") {
+      flagPreviewIndex = cellIndex;
+      renderFlagPreview(isFlagPreviewMode, flagPreviewIndex);
+    } else if (evt.type === "mouseout") {
+      renderFlagPreview(false, flagPreviewIndex);
+      flagPreviewIndex = -1;
+    }
+  }
+}
+
+function renderFlagPreview(requestPreview, cellIndex) {
+  if (cellIndex < 0) {
+    return;
+  }
+
+  if (board[cellIndex] !== null || flags[cellIndex]) {
+    return;
+  }
+
+  const element = cellElems[cellIndex];
+  element.innerHTML = requestPreview ? "f" : "";
 }
 
 function handleDifficultyChange(evt) {
@@ -113,19 +164,22 @@ function tryHandleFlagToggle(evt, cellIndex) {
     return false;
   }
 
-  if (board[cellIndex] !== null) {
-    return;
-  }
+  const cellValue = board[cellIndex];
+  const isFlaggable = cellValue < 0 || cellValue === null;
 
-  if (flags[cellIndex]) {
-    delete flags[cellIndex];
-    if (board.length > 0) {
-      board[cellIndex] = null;
-    }
-  } else {
-    flags[cellIndex] = true;
-    if (board.length > 0) {
-      board[cellIndex] = -1;
+  if (isFlaggable) {
+    if (flags[cellIndex]) {
+      // remove flag ...
+      delete flags[cellIndex];
+      if (board.length > 0) {
+        board[cellIndex] = null;
+      }
+    } else {
+      // set flag ...
+      flags[cellIndex] = true;
+      if (board.length > 0) {
+        board[cellIndex] = -1;
+      }
     }
   }
 
