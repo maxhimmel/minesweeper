@@ -17,6 +17,7 @@
   --face-color: lightgrey;
   --border-color: white;
   --pressed-color: lightgrey;
+  --face-color-content: black;
 }
 
 body {
@@ -28,22 +29,27 @@ body {
   background-color: var(--face-color);
 }
 
-main {
+.container {
   display: flex;
   flex-direction: column;
+  align-items: center;
   padding: 1rem;
-  gap: 0.5rem;
+  gap: 1rem;
   background-color: var(--face-color);
   border: 0.5rem outset var(--border-color);
 }
 
-#controls {
+.sub-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-shrink: 0;
   background-color: var(--pressed-color);
   border: 0.5rem inset var(--border-color);
-  padding: 0 0.5rem;
+  width: 100%;
+}
+
+#controls {
+  justify-content: space-between;
+  align-items: center;
 }
 
 #controls * {
@@ -76,24 +82,17 @@ main {
   border: 0.25rem inset var(--pressed-color);
 }
 
-.difficulty {
-  display: flex;
-  gap: 1rem;
-}
-
 input[type="radio"] + label {
-  color: white;
-  background-color: black;
+  color: var(--face-color-content);
+  background-color: var(--face-color);
   padding: 1rem;
-  border-radius: 2rem;
-  border: 0.1rem solid transparent;
+  border: 0.35rem outset var(--border-color);
   cursor: pointer;
 }
 
 input[type="radio"]:checked + label {
-  color: black;
-  background-color: white;
-  border: 0.1rem solid black;
+  background-color: var(--pressed-color);
+  border: 0.35rem inset var(--pressed-color);
 }
 
 .mine-1 {

@@ -29,7 +29,7 @@ let flagPreviewIndex = -1;
 let gameState = "PLAYING";
 
 const boardElem = document.getElementById("board");
-const difficultyElem = document.querySelector(".difficulty");
+const difficultyElem = document.getElementById("difficulty");
 const cellElems = [];
 const flagsElem = document.getElementById("flags");
 const timerElem = document.getElementById("timer");
