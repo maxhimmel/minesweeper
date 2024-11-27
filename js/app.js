@@ -26,6 +26,7 @@ let timerUpdater = null;
 let seconds = 0;
 let isFlagPreviewMode = false;
 let flagPreviewIndex = -1;
+let isGameOver = false;
 
 const boardElem = document.getElementById("board");
 const difficultyElem = document.querySelector(".difficulty");
@@ -37,6 +38,7 @@ const resetBtn = document.getElementById("reset");
 init();
 
 function init() {
+  isGameOver = false;
   hasPlacedMines = false;
   board.splice(0, board.length);
   boardSolution.splice(0, boardSolution.length);
@@ -153,6 +155,10 @@ function handleCellClick(evt) {
       } else {
         revealCell(cellIndex, false);
       }
+
+      if (isGameOver) {
+        handleGameOver();
+      }
     }
   }
 
@@ -252,11 +258,7 @@ function revealCell(cellIndex, ignoreInitial) {
 
     // Hit a mine!
     if (cellValue < 0) {
-      boardSolution.forEach((cell, idx) => {
-        if (cell < 0) {
-          board[idx] = cell;
-        }
-      });
+      isGameOver = true;
       return;
     }
 
@@ -270,6 +272,14 @@ function revealCell(cellIndex, ignoreInitial) {
       revealCells(adjacentIdx, visitedCells, false);
     }
   }
+}
+
+function handleGameOver() {
+  boardSolution.forEach((cell, idx) => {
+    if (cell < 0) {
+      board[idx] = cell;
+    }
+  });
 }
 
 function render() {
