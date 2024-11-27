@@ -15,6 +15,9 @@ const DIFFICULTIES = {
     mineCount: 99,
   },
 };
+const WIN_FACES = ["🤠", "😎", "🥳"];
+const LOSE_FACES = ["🫠", "😵", "🤯"];
+const GUESS_FACES = ["😮", "😲", "🧐"];
 
 const board = [];
 let flags = {};
@@ -154,7 +157,7 @@ function renderGuessFace(evt) {
     evt.type === "mousedown" && evt.target.matches("#board, .cell");
 
   if (isClickingBoard) {
-    resetBtn.innerText = "😲";
+    resetBtn.innerText = getRandomItem(GUESS_FACES);
   } else if (evt.type === "mouseup") {
     resetBtn.innerText = "🙂";
   }
@@ -344,7 +347,11 @@ function render() {
   timerElem.textContent = `${seconds}`.padStart(3, "0");
 
   resetBtn.innerText =
-    gameState === "PLAYING" ? "🙂" : gameState === "WIN" ? "😎" : "😵";
+    gameState === "PLAYING"
+      ? "🙂"
+      : gameState === "WIN"
+      ? getRandomItem(WIN_FACES)
+      : getRandomItem(LOSE_FACES);
 }
 
 /* --- helpers --- */
@@ -354,6 +361,15 @@ function shuffle(array) {
     const jdx = Math.floor(Math.random() * (idx + 1));
     [array[idx], array[jdx]] = [array[jdx], array[idx]];
   }
+}
+
+function getRandomItem(array) {
+  if (!Array.isArray(array)) {
+    return undefined;
+  }
+
+  const randIdx = Math.floor(Math.random() * array.length);
+  return array[randIdx];
 }
 
 function getCellCoord(index) {
