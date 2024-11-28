@@ -158,19 +158,28 @@ nav {
   padding: 0.5rem;
 }
 
-.nav-bar {
+.nav-bar-top {
   position: absolute;
   inset: 0;
+  bottom: 0.5rem;
+  background-color: var(--face-color);
+  border: 0.5rem groove var(--border-color);
+  border-bottom-style: none;
+}
+
+.nav-bar-bottom {
+  position: absolute;
+  inset: 0;
+  z-index: -200;
   background-color: var(--face-color);
   border: 0.5rem groove var(--border-color);
 }
 
 nav > menu {
   position: absolute;
-  z-index: -1;
+  z-index: -100;
   top: calc(100% - 0.5rem);
   right: 0;
-  padding-top: 0.5rem;
   display: flex;
   align-items: start;
 }
