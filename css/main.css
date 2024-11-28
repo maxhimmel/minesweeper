@@ -86,6 +86,9 @@ body {
 .cell:active:hover {
   border: 0.25rem inset var(--pressed-color);
 }
+.cell:not(.pressed, :active):hover {
+  background-color: var(--highlight-color);
+}
 
 .pressed {
   border: 0.25rem inset var(--pressed-color);
