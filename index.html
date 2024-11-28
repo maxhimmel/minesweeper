@@ -11,6 +11,32 @@
     <script defer src="js/app.js"></script>
   </head>
   <body class="pattern-rain">
+    <nav>
+      <div class="nav-bar"></div>
+      <menu>
+        <label for="controls" class="popout">
+          <ul>
+            <li><strong>alt/option + click:</strong> flag</li>
+            <li><strong>shift + click:</strong> chording</li>
+          </ul>
+
+          <label class="tab" for="controls">controls</label>
+          <input type="checkbox" id="controls" name="controls" hidden />
+        </label>
+
+        <label for="settings" class="popout">
+          <ul>
+            <li>
+              <input type="checkbox" id="debug-1" name="debug-1" />
+              <label for="debug-1">debug-1</label>
+            </li>
+          </ul>
+
+          <label class="tab" for="settings">settings</label>
+          <input type="checkbox" id="settings" name="settings" hidden />
+        </label>
+      </menu>
+    </nav>
     <main>
       <div id="game" class="container">
         <h1>Minesweeper</h1>
@@ -38,15 +64,6 @@
           <div id="board"></div>
         </section>
       </div>
-      <section class="controls-container">
-        <input type="checkbox" id="controls" name="controls" hidden />
-        <label for="controls">controls</label>
-
-        <ul>
-          <li><strong>alt/option + click:</strong> flag</li>
-          <li><strong>shift + click:</strong> chording</li>
-        </ul>
-      </section>
     </main>
   </body>
 </html>
