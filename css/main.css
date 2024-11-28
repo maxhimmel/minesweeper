@@ -18,6 +18,17 @@
   --border-color: white;
   --pressed-color: lightgrey;
   --face-color-content: black;
+  --highlight-color: whitesmoke;
+}
+
+.ignore-mouse {
+  pointer-events: none;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 body {
@@ -121,49 +132,4 @@ input[type="radio"]:checked + label {
 }
 .mine-8 {
   color: grey;
-}
-
-.mine {
-  border-radius: 50%;
-  background-color: black;
-  width: 50%;
-  height: 50%;
-}
-
-.cell:has(.mine) {
-  background-color: red;
-}
-
-.flag {
-  background-image: url("../images/flag.svg");
-}
-
-.timer-unset {
-  background-image: url("../images/timer-unset.svg");
-}
-
-.timer-tick {
-  background-image: url("../images/timer-tick.svg");
-}
-
-.timer-done {
-  background-image: url("../images/timer-done.svg");
-}
-
-.icon {
-  width: 2.65dvh;
-  height: 2.65dvh;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-}
-
-.ignore-mouse {
-  pointer-events: none;
-}
-
-.flex-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
 }
