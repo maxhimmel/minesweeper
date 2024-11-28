@@ -11,30 +11,41 @@
     <script defer src="js/app.js"></script>
   </head>
   <body class="pattern-rain">
-    <main class="container">
-      <h1>Minesweeper</h1>
-      <section id="difficulty" class="sub-container">
-        <input type="radio" id="easy" name="difficulty" checked hidden />
-        <label for="easy">Beginner</label>
-        <input type="radio" id="medium" name="difficulty" hidden />
-        <label for="medium">Intermediate</label>
-        <input type="radio" id="hard" name="difficulty" hidden />
-        <label for="hard">Expert</label>
-      </section>
+    <main>
+      <div id="game" class="container">
+        <h1>Minesweeper</h1>
+        <section id="difficulty" class="sub-container">
+          <input type="radio" id="easy" name="difficulty" checked hidden />
+          <label for="easy">Beginner</label>
+          <input type="radio" id="medium" name="difficulty" hidden />
+          <label for="medium">Intermediate</label>
+          <input type="radio" id="hard" name="difficulty" hidden />
+          <label for="hard">Expert</label>
+        </section>
 
-      <section class="container">
-        <div id="controls" class="sub-container">
-          <div class="flex-row">
-            <div class="icon flag"></div>
-            <div id="flags">99</div>
+        <section class="container">
+          <div id="score" class="sub-container">
+            <div class="flex-row">
+              <div class="icon flag"></div>
+              <div id="flags">99</div>
+            </div>
+            <button id="reset" class="btn">{reset}</button>
+            <div class="flex-row">
+              <div id="timer">0</div>
+              <div class="timer-unset"></div>
+            </div>
           </div>
-          <button id="reset" class="btn">{reset}</button>
-          <div class="flex-row">
-            <div id="timer">0</div>
-            <div class="timer-unset"></div>
-          </div>
-        </div>
-        <div id="board"></div>
+          <div id="board"></div>
+        </section>
+      </div>
+      <section class="controls-container">
+        <input type="checkbox" id="controls" name="controls" hidden />
+        <label for="controls">controls</label>
+
+        <ul>
+          <li><strong>alt/option + click:</strong> flag</li>
+          <li><strong>shift + click:</strong> chording</li>
+        </ul>
       </section>
     </main>
   </body>

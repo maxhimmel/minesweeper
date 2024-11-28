@@ -12,6 +12,8 @@
   color: var(--face-color-content);
   background-color: transparent;
 
+  list-style: none;
+
   transition: all 150ms;
 
   --face-color: lightgrey;
@@ -39,6 +41,15 @@ body {
   background-color: var(--face-color);
 }
 
+main {
+  position: relative;
+}
+
+#game {
+  position: relative;
+  z-index: 100;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -55,14 +66,14 @@ body {
   border: 0.5rem inset var(--border-color);
 }
 
-#controls {
+#score {
   justify-content: space-between;
   /* align-items: center; */
   width: 100%;
   padding: 0 0.2rem;
 }
 
-#controls * {
+#score * {
   font-size: 2rem;
 }
 
@@ -135,4 +146,46 @@ input[type="radio"]:checked + label {
 }
 .mine-8 {
   color: grey;
+}
+
+/* --- */
+
+.controls-container {
+  position: absolute;
+  top: 0;
+  width: 10rem;
+  padding: 0.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--face-color);
+  border-width: 0.35rem;
+  border-right-width: 0;
+  border-style: ridge;
+  border-color: var(--border-color);
+}
+
+.controls-container:has(input[name="controls"]:checked) {
+  transform: translateX(-100%);
+}
+
+input[name="controls"] + label {
+  position: absolute;
+  top: -0.35rem;
+  right: 100%;
+  padding: 0.25rem 1.5rem;
+  padding-left: 0.5rem;
+  background-color: var(--face-color);
+  border-width: 0.35rem;
+  border-right-width: 0;
+  border-style: ridge;
+  border-color: var(--border-color);
+}
+input[name="controls"]:checked + label {
+  background-color: var(--highlight-color);
+}
+
+.controls-container ul {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
