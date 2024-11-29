@@ -8,6 +8,8 @@
   border: 0;
 
   font-family: monospace, serif;
+  -webkit-user-select: none; /* Safari */
+  user-select: none;
 
   color: var(--face-color-content);
   background-color: transparent;
