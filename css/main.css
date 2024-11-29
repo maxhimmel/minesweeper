@@ -222,7 +222,7 @@ nav > menu {
 
 .popout:has(.tab + input:checked) {
   transform: translateY(0);
-  max-width: max-content;
+  max-width: 100dvw;
 }
 
 /* .popout:has(.tab + input:checked), */
