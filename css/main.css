@@ -156,6 +156,8 @@ nav {
   inset: 0;
   height: 2rem;
   padding: 0.5rem;
+
+  /* box-shadow: 0rem 0.25rem 5rem 0.1rem black; */
 }
 
 .nav-bar-top {
@@ -194,6 +196,9 @@ nav > menu {
   padding: 0.5rem 1rem;
   display: flex;
   flex-direction: column;
+
+  /* transition-duration: 300ms;
+  transition-timing-function: cubic-bezier(0.47, 1.64, 0.41, 0.8); */
 }
 
 .tab {
