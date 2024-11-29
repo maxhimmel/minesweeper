@@ -160,7 +160,7 @@ nav {
   height: 2rem;
   padding: 0.5rem;
 
-  /* box-shadow: 0rem 0.25rem 5rem 0.1rem black; */
+  filter: drop-shadow(black 0rem 0.1rem 0.5rem);
 }
 
 .nav-bar-top {
