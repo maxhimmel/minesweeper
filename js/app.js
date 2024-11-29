@@ -52,36 +52,52 @@ difficultyElem.addEventListener("click", (evt) => {
 
 init();
 function init() {
+  clearState();
+  clearTimer();
+  initBoard();
+
+  boardElem.removeEventListener("click", handleCellClick);
+  boardElem.addEventListener("click", handleCellClick);
+
+  render();
+}
+
+function clearState() {
   gameState = "PLAYING";
   hasPlacedMines = false;
   losingCellIndex = -1;
+  flags = {};
   board.splice(0, board.length);
   boardSolution.splice(0, boardSolution.length);
-  flags = {};
   shuffledIndices.splice(0, shuffledIndices.length);
-  boardElem.innerHTML = null;
-  cellElems.splice(0, cellElems.length);
-  boardElem.style.gridTemplateColumns = `repeat(${difficulty.colCount}, 1fr)`;
+}
+
+function clearTimer() {
   seconds = 0;
   clearTimeout(timerUpdater);
   timerIconElem.className = "timer-unset";
+}
+
+function initBoard() {
+  boardElem.innerHTML = null;
+  cellElems.splice(0, cellElems.length);
+  boardElem.style.gridTemplateColumns = `repeat(${difficulty.colCount}, 1fr)`;
 
   for (let idx = 0; idx < difficulty.colCount * difficulty.rowCount; ++idx) {
     board.push(null);
     boardSolution.push(0);
     shuffledIndices.push(idx);
 
-    const cellElem = document.createElement("button");
-    cellElem.classList.add("cell");
-
-    boardElem.append(cellElem);
-    cellElems.push(cellElem);
+    addCellElement();
   }
+}
 
-  boardElem.removeEventListener("click", handleCellClick);
-  boardElem.addEventListener("click", handleCellClick);
+function addCellElement() {
+  const cellElem = document.createElement("button");
+  cellElem.classList.add("cell");
 
-  render();
+  boardElem.append(cellElem);
+  cellElems.push(cellElem);
 }
 
 function handleCellClick(evt) {
@@ -142,7 +158,7 @@ function tryHandleFlagToggle(evt, cellIndex) {
 function startTimer() {
   timerUpdater = setInterval(() => {
     ++seconds;
-    timerElem.textContent = `${seconds}`.padStart(3, "0");
+    timerElem.textContent = getTextAsScore(seconds);
   }, 1000);
 }
 
@@ -150,18 +166,18 @@ function generateMines(safeCellIndex) {
   hasPlacedMines = true;
   flags = {};
 
-  // remove a pocket of cells from mine selection ...
+  // Remove a pocket of cells from mine selection ...
   for (const adjacentIdx of getAdjacentCellIndices(safeCellIndex, true)) {
     const index = shuffledIndices.indexOf(adjacentIdx);
     shuffledIndices.splice(index, 1);
   }
   shuffle(shuffledIndices);
 
-  for (let mine = 0; mine < difficulty.mineCount; ++mine) {
-    const idx = shuffledIndices[mine];
-    boardSolution[idx] = -1;
+  for (let idx = 0; idx < difficulty.mineCount; ++idx) {
+    const mine = shuffledIndices[idx];
+    boardSolution[mine] = -1;
 
-    for (const adjacentIdx of getAdjacentCellIndices(idx)) {
+    for (const adjacentIdx of getAdjacentCellIndices(mine)) {
       if (boardSolution[adjacentIdx] >= 0) {
         ++boardSolution[adjacentIdx];
       }
@@ -235,9 +251,10 @@ function handleGameOver() {
 
     gameState = "WIN";
   } else if (gameState === "LOSE") {
-    boardSolution.forEach((cell, idx) => {
-      if (cell < 0) {
-        board[idx] = cell;
+    // Update the user's board w/mines ...
+    boardSolution.forEach((cellValue, idx) => {
+      if (cellValue < 0) {
+        board[idx] = cellValue;
       }
     });
   }
@@ -248,49 +265,64 @@ function handleGameOver() {
 
 function render() {
   for (let idx = 0; idx < board.length; ++idx) {
-    const cellElem = cellElems[idx];
-    const cellValue = board[idx];
-
-    cellElem.innerHTML = "";
-    cellElem.classList.toggle("pressed", !flags[idx] && cellValue !== null);
-
-    if (flags[idx]) {
-      cellElem.innerHTML = getFlagIcon();
-    } else if (cellValue > 0) {
-      cellElem.innerHTML = getAdjacentMineIcon(cellValue);
-    } else if (cellValue < 0) {
-      cellElem.innerHTML = getMineIcon();
-    }
+    renderCell(idx);
   }
 
   if (gameState === "LOSE") {
-    const losingElem = cellElems[losingCellIndex];
-    losingElem.style = "background-color: yellow";
-
-    for (const idx in flags) {
-      if (boardSolution[idx] !== -1) {
-        const cellElem = cellElems[idx];
-        cellElem.innerHTML = "❌";
-      }
-    }
+    renderLoseCells();
   }
 
-  flagsElem.textContent = `${
-    difficulty.mineCount - Object.keys(flags).length
-  }`.padStart(3, "0");
-  timerElem.textContent = `${seconds}`.padStart(3, "0");
-  timerIconElem.className = !hasPlacedMines
-    ? "icon timer-unset"
-    : gameState !== "PLAYING"
-    ? "icon timer-done"
-    : "icon timer-tick";
+  renderScoreboard();
+}
 
-  resetBtn.innerText =
-    gameState === "PLAYING"
-      ? "🙂"
-      : gameState === "WIN"
-      ? getRandomItem(WIN_FACES)
-      : getRandomItem(LOSE_FACES);
+function renderCell(cellIndex) {
+  const cellElem = cellElems[cellIndex];
+  const cellValue = board[cellIndex];
+
+  cellElem.innerHTML = "";
+
+  const isMarked = cellValue !== null && !flags[cellIndex];
+  cellElem.classList.toggle("pressed", isMarked);
+
+  if (flags[cellIndex]) {
+    cellElem.innerHTML = getFlagIcon();
+  } else if (cellValue > 0) {
+    cellElem.innerHTML = getAdjacentMineIcon(cellValue);
+  } else if (cellValue < 0) {
+    cellElem.innerHTML = getMineIcon();
+  }
+}
+
+function renderLoseCells() {
+  const losingElem = cellElems[losingCellIndex];
+  losingElem.style = "background-color: yellow";
+
+  for (const idx in flags) {
+    if (boardSolution[idx] !== -1) {
+      const cellElem = cellElems[idx];
+      cellElem.innerHTML = "❌";
+    }
+  }
+}
+
+function renderScoreboard() {
+  flagsElem.textContent = getTextAsScore(
+    difficulty.mineCount - Object.keys(flags).length
+  );
+  timerElem.textContent = getTextAsScore(seconds);
+
+  timerIconElem.className = "icon timer-done";
+
+  if (gameState === "PLAYING") {
+    timerIconElem.className = !hasPlacedMines
+      ? "icon timer-unset"
+      : "icon timer-tick";
+    resetBtn.innerText = "🙂";
+  } else if (gameState === "WIN") {
+    resetBtn.innerText = getRandomItem(WIN_FACES);
+  } else if (gameState === "LOSE") {
+    resetBtn.innerText = getRandomItem(LOSE_FACES);
+  }
 }
 
 initPreviewRendering();
