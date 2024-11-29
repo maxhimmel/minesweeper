@@ -4,6 +4,13 @@ import {
   LOSE_FACES,
   WIN_FACES,
 } from "./constants.js";
+import { shuffle, getRandomItem } from "./randomHelpers.js";
+import {
+  getTextAsScore,
+  getAdjacentMineIcon,
+  getFlagIcon,
+  getMineIcon,
+} from "./styleHelpers.js";
 
 // STATE
 const board = [];
@@ -355,20 +362,23 @@ function initPreviewRendering() {
 
 /* --- helpers --- */
 
-function shuffle(array) {
-  for (let idx = array.length - 1; idx > 0; --idx) {
-    const jdx = Math.floor(Math.random() * (idx + 1));
-    [array[idx], array[jdx]] = [array[jdx], array[idx]];
-  }
-}
+function* getAdjacentCellIndices(cellIndex, includeSelf = false) {
+  const cellCoord = getCellCoord(cellIndex);
+  for (let col = -1; col <= 1; ++col) {
+    for (let row = -1; row <= 1; ++row) {
+      if (!includeSelf && col === 0 && row === 0) {
+        continue;
+      }
 
-function getRandomItem(array) {
-  if (!Array.isArray(array)) {
-    return undefined;
+      const adjacentIndex = getCellIndex(
+        cellCoord.col + col,
+        cellCoord.row + row
+      );
+      if (adjacentIndex >= 0) {
+        yield adjacentIndex;
+      }
+    }
   }
-
-  const randIdx = Math.floor(Math.random() * array.length);
-  return array[randIdx];
 }
 
 function getCellCoord(index) {
@@ -389,35 +399,4 @@ function getCellIndex(col, row) {
   }
 
   return col + row * difficulty.colCount;
-}
-
-function* getAdjacentCellIndices(cellIndex, includeSelf = false) {
-  const cellCoord = getCellCoord(cellIndex);
-  for (let col = -1; col <= 1; ++col) {
-    for (let row = -1; row <= 1; ++row) {
-      if (!includeSelf && col === 0 && row === 0) {
-        continue;
-      }
-
-      const adjacentIndex = getCellIndex(
-        cellCoord.col + col,
-        cellCoord.row + row
-      );
-      if (adjacentIndex >= 0) {
-        yield adjacentIndex;
-      }
-    }
-  }
-}
-
-function getFlagIcon() {
-  return `<div class="flag icon ignore-mouse"></div>`;
-}
-
-function getMineIcon() {
-  return `<div class="mine"></div>`;
-}
-
-function getAdjacentMineIcon(adjacencyCount) {
-  return `<div class="mine-${adjacencyCount} ignore-mouse">${adjacencyCount}</div>`;
 }
