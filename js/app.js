@@ -274,6 +274,8 @@ function render() {
   }
 
   renderScoreboard();
+
+  handleShowMinesCheat();
 }
 
 function renderCell(cellIndex) {
@@ -359,6 +361,10 @@ function initPreviewRendering() {
   }
 
   function renderFlagPreview(requestPreview, cellIndex) {
+    if (enableShowMinesCheat) {
+      return;
+    }
+
     if (cellIndex < 0) {
       return;
     }
@@ -387,8 +393,46 @@ function initPreviewRendering() {
 
     if (isClickingBoard) {
       resetBtn.innerText = getRandomItem(GUESS_FACES);
+      handlePeekCheat(evt.target);
     } else if (evt.type === "mouseup") {
       resetBtn.innerText = "🙂";
+    }
+  }
+}
+
+/* --- cheats ---*/
+
+var enablePeekCheat = false;
+document.getElementById("peeker").addEventListener("change", (evt) => {
+  enablePeekCheat = evt.target.checked;
+});
+function handlePeekCheat(clickedElement) {
+  if (enablePeekCheat) {
+    const cellIndex = cellElems.indexOf(clickedElement);
+    if (cellIndex >= 0) {
+      if (boardSolution[cellIndex] < 0) {
+        resetBtn.innerText = "🫣";
+      }
+    }
+  }
+}
+
+var enableShowMinesCheat = false;
+document.getElementById("show-mines").addEventListener("change", (evt) => {
+  enableShowMinesCheat = evt.target.checked;
+  render();
+});
+function handleShowMinesCheat() {
+  if (enableShowMinesCheat) {
+    for (let idx = 0; idx < boardSolution.length; ++idx) {
+      const cellValue = boardSolution[idx];
+      const cellElem = cellElems[idx];
+
+      if (cellValue < 0 && !flags[idx]) {
+        cellElem.innerHTML = getMineIcon();
+      } else if (cellValue >= 0 && flags[idx]) {
+        cellElem.innerHTML = getMisplacedFlagIcon();
+      }
     }
   }
 }
