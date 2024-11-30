@@ -222,6 +222,8 @@ nav > menu {
   border: 0.5rem groove var(--border-color);
   border-top-width: 0;
   width: var(--tab-width);
+  display: flex;
+  justify-content: center;
 }
 
 .popout:has(.tab + input:checked) {
