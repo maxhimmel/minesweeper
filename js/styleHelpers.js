@@ -13,3 +13,7 @@ export function getMineIcon() {
 export function getAdjacentMineIcon(adjacencyCount) {
   return `<div class="mine-${adjacencyCount} ignore-mouse">${adjacencyCount}</div>`;
 }
+
+export function getMisplacedFlagIcon() {
+  return `❌`;
+}

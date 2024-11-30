@@ -10,6 +10,7 @@ import {
   getAdjacentMineIcon,
   getFlagIcon,
   getMineIcon,
+  getMisplacedFlagIcon,
 } from "./styleHelpers.js";
 
 // STATE
@@ -300,7 +301,7 @@ function renderLoseCells() {
   for (const idx in flags) {
     if (boardSolution[idx] !== -1) {
       const cellElem = cellElems[idx];
-      cellElem.innerHTML = "❌";
+      cellElem.innerHTML = getMisplacedFlagIcon();
     }
   }
 }
