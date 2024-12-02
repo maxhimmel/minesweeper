@@ -5,6 +5,7 @@ import {
   LOSE_FACES,
   WIN_FACES,
 } from "./constants.js";
+import { FlagController } from "./flagController.js";
 import { shuffle, getRandomItem } from "./randomHelpers.js";
 import {
   getTextAsScore,
@@ -19,7 +20,6 @@ class GameController {
   constructor() {
     this.gameState = "PLAYING";
     this.board = [];
-    this.flags = {};
     this.boardSolution = [];
     this.shuffledIndices = [];
     this.hasPlacedMines = false;
@@ -28,6 +28,7 @@ class GameController {
     this.flagPreviewIndex = -1;
     this.losingCellIndex = -1;
 
+    this.flagController = new FlagController();
     this.boardNavigator = new BoardNavigator(
       this.difficulty.colCount,
       this.difficulty.rowCount
@@ -75,7 +76,7 @@ class GameController {
     this.gameState = "PLAYING";
     this.hasPlacedMines = false;
     this.losingCellIndex = -1;
-    this.flags = {};
+    this.flagController.clear();
     this.board.splice(0, this.board.length);
     this.boardSolution.splice(0, this.boardSolution.length);
     this.shuffledIndices.splice(0, this.shuffledIndices.length);
@@ -121,7 +122,7 @@ class GameController {
         this.timerController.timer.restart();
       }
 
-      if (!this.flags[cellIndex]) {
+      if (!this.flagController.has(cellIndex)) {
         if (evt.shiftKey) {
           this.chordCell(cellIndex);
         } else {
@@ -144,15 +145,12 @@ class GameController {
     const isFlaggable = cellValue < 0 || cellValue === null;
 
     if (isFlaggable) {
-      if (this.flags[cellIndex]) {
-        // remove flag ...
-        delete this.flags[cellIndex];
+      if (this.flagController.tryRemove(cellIndex)) {
         if (this.hasPlacedMines) {
           this.board[cellIndex] = null;
         }
       } else {
-        // set flag ...
-        this.flags[cellIndex] = true;
+        this.flagController.add(cellIndex);
         if (this.hasPlacedMines) {
           this.board[cellIndex] = -1;
         }
@@ -164,7 +162,7 @@ class GameController {
 
   generateMines(safeCellIndex) {
     this.hasPlacedMines = true;
-    this.flags = {};
+    this.flagController.clear();
 
     // Remove a pocket of cells from mine selection ...
     for (const adjacentIdx of this.boardNavigator.getAdjacentCellIndices(
@@ -201,7 +199,7 @@ class GameController {
     for (const adjacentIdx of this.boardNavigator.getAdjacentCellIndices(
       cellIndex
     )) {
-      if (this.flags[adjacentIdx]) {
+      if (this.flagController.has(adjacentIdx)) {
         ++flagSum;
       }
     }
@@ -220,7 +218,7 @@ class GameController {
         return;
       }
 
-      if (that.flags[cellIndex]) {
+      if (that.flagController.has(cellIndex)) {
         return;
       }
 
@@ -293,10 +291,10 @@ class GameController {
 
     cellElem.innerHTML = "";
 
-    const isMarked = cellValue !== null && !this.flags[cellIndex];
+    const isMarked = cellValue !== null && !this.flagController.has(cellIndex);
     cellElem.classList.toggle("pressed", isMarked);
 
-    if (this.flags[cellIndex]) {
+    if (this.flagController.has(cellIndex)) {
       cellElem.innerHTML = getFlagIcon();
     } else if (cellValue > 0) {
       cellElem.innerHTML = getAdjacentMineIcon(cellValue);
@@ -309,7 +307,7 @@ class GameController {
     const losingElem = this.cellElems[this.losingCellIndex];
     losingElem.style = "background-color: yellow";
 
-    for (const idx in this.flags) {
+    for (const idx of this.flagController.getIndices()) {
       if (this.boardSolution[idx] !== -1) {
         const cellElem = this.cellElems[idx];
         cellElem.innerHTML = getMisplacedFlagIcon();
@@ -319,7 +317,7 @@ class GameController {
 
   renderScoreboard() {
     this.flagsElem.textContent = getTextAsScore(
-      this.difficulty.mineCount - Object.keys(this.flags).length
+      this.difficulty.mineCount - this.flagController.count
     );
 
     if (this.gameState === "PLAYING") {
@@ -381,7 +379,10 @@ class GameController {
         return;
       }
 
-      if (that.board[cellIndex] !== null || that.flags[cellIndex]) {
+      if (
+        that.board[cellIndex] !== null ||
+        that.flagController.has(cellIndex)
+      ) {
         return;
       }
 
@@ -441,10 +442,11 @@ class GameController {
       for (let idx = 0; idx < this.boardSolution.length; ++idx) {
         const cellValue = this.boardSolution[idx];
         const cellElem = this.cellElems[idx];
+        const isFlagged = this.flagController.has(idx);
 
-        if (cellValue < 0 && !this.flags[idx]) {
+        if (cellValue < 0 && !isFlagged) {
           cellElem.innerHTML = getMineIcon();
-        } else if (cellValue >= 0 && this.flags[idx]) {
+        } else if (cellValue >= 0 && isFlagged) {
           cellElem.innerHTML = getMisplacedFlagIcon();
         }
       }
