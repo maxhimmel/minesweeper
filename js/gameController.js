@@ -12,6 +12,7 @@ import {
   getMineIcon,
   getMisplacedFlagIcon,
 } from "./styleHelpers.js";
+import { TimerController } from "./timerController.js";
 
 class GameController {
   constructor() {
@@ -22,18 +23,16 @@ class GameController {
     this.shuffledIndices = [];
     this.hasPlacedMines = false;
     this.difficulty = DIFFICULTIES.easy;
-    this.timerUpdater = null;
-    this.seconds = 0;
     this.isFlagPreviewMode = false;
     this.flagPreviewIndex = -1;
     this.losingCellIndex = -1;
+
+    this.timerController = new TimerController(1000, "#timer", "#timer + div");
 
     this.boardElem = document.getElementById("board");
     this.difficultyElem = document.getElementById("difficulty");
     this.cellElems = [];
     this.flagsElem = document.getElementById("flags");
-    this.timerElem = document.getElementById("timer");
-    this.timerIconElem = document.querySelector("#timer + div");
     this.resetBtn = document.getElementById("reset");
 
     this.cellClickEventHandler = this.handleCellClick.bind(this);
@@ -58,7 +57,7 @@ class GameController {
 
   init() {
     this.clearState();
-    this.clearTimer();
+    this.timerController.timer.clear();
     this.initBoard();
 
     this.boardElem.removeEventListener("click", this.cellClickEventHandler);
@@ -75,13 +74,6 @@ class GameController {
     this.board.splice(0, this.board.length);
     this.boardSolution.splice(0, this.boardSolution.length);
     this.shuffledIndices.splice(0, this.shuffledIndices.length);
-  }
-
-  clearTimer() {
-    this.seconds = 0;
-    clearTimeout(this.timerUpdater);
-    this.timerUpdater = null;
-    this.timerIconElem.className = "timer-unset";
   }
 
   initBoard() {
@@ -119,7 +111,7 @@ class GameController {
     if (!this.tryHandleFlagToggle(evt, cellIndex)) {
       if (!this.hasPlacedMines) {
         this.generateMines(cellIndex);
-        this.startTimer();
+        this.timerController.timer.restart();
       }
 
       if (!this.flags[cellIndex]) {
@@ -161,13 +153,6 @@ class GameController {
     }
 
     return true;
-  }
-
-  startTimer() {
-    this.timerUpdater = setInterval(() => {
-      ++this.seconds;
-      this.timerElem.textContent = getTextAsScore(this.seconds);
-    }, 1000);
   }
 
   generateMines(safeCellIndex) {
@@ -271,7 +256,7 @@ class GameController {
       });
     }
 
-    clearTimeout(this.timerUpdater);
+    this.timerController.timer.stop();
     this.boardElem.removeEventListener("click", this.cellClickEventHandler);
   }
 
@@ -323,14 +308,8 @@ class GameController {
     this.flagsElem.textContent = getTextAsScore(
       this.difficulty.mineCount - Object.keys(this.flags).length
     );
-    this.timerElem.textContent = getTextAsScore(this.seconds);
-
-    this.timerIconElem.className = "icon timer-done";
 
     if (this.gameState === "PLAYING") {
-      this.timerIconElem.className = !this.hasPlacedMines
-        ? "icon timer-unset"
-        : "icon timer-tick";
       this.resetBtn.innerText = "🙂";
     } else if (this.gameState === "WIN") {
       this.resetBtn.innerText = getRandomItem(WIN_FACES);
