@@ -1,3 +1,4 @@
+import { BoardNavigator } from "./boardNavigator.js";
 import {
   DIFFICULTIES,
   GUESS_FACES,
@@ -27,6 +28,10 @@ class GameController {
     this.flagPreviewIndex = -1;
     this.losingCellIndex = -1;
 
+    this.boardNavigator = new BoardNavigator(
+      this.difficulty.colCount,
+      this.difficulty.rowCount
+    );
     this.timerController = new TimerController(1000, "#timer", "#timer + div");
 
     this.boardElem = document.getElementById("board");
@@ -77,13 +82,15 @@ class GameController {
   }
 
   initBoard() {
+    this.boardNavigator = new BoardNavigator(
+      this.difficulty.colCount,
+      this.difficulty.rowCount
+    );
     this.boardElem.innerHTML = null;
     this.cellElems.splice(0, this.cellElems.length);
-    this.boardElem.style.gridTemplateColumns = `repeat(${this.difficulty.colCount}, 1fr)`;
+    this.boardElem.style.gridTemplateColumns = `repeat(${this.boardNavigator.colCount}, 1fr)`;
 
-    const gridArea = this.difficulty.colCount * this.difficulty.rowCount;
-
-    for (let idx = 0; idx < gridArea; ++idx) {
+    for (let idx = 0; idx < this.boardNavigator.length; ++idx) {
       this.board.push(null);
       this.boardSolution.push(0);
       this.shuffledIndices.push(idx);
@@ -160,7 +167,7 @@ class GameController {
     this.flags = {};
 
     // Remove a pocket of cells from mine selection ...
-    for (const adjacentIdx of this.getAdjacentCellIndices(
+    for (const adjacentIdx of this.boardNavigator.getAdjacentCellIndices(
       safeCellIndex,
       true
     )) {
@@ -173,7 +180,9 @@ class GameController {
       const mine = this.shuffledIndices[idx];
       this.boardSolution[mine] = -1;
 
-      for (const adjacentIdx of this.getAdjacentCellIndices(mine)) {
+      for (const adjacentIdx of this.boardNavigator.getAdjacentCellIndices(
+        mine
+      )) {
         if (this.boardSolution[adjacentIdx] >= 0) {
           ++this.boardSolution[adjacentIdx];
         }
@@ -189,7 +198,9 @@ class GameController {
     }
 
     let flagSum = 0;
-    for (const adjacentIdx of this.getAdjacentCellIndices(cellIndex)) {
+    for (const adjacentIdx of this.boardNavigator.getAdjacentCellIndices(
+      cellIndex
+    )) {
       if (this.flags[adjacentIdx]) {
         ++flagSum;
       }
@@ -228,7 +239,9 @@ class GameController {
       }
 
       // Jackpot!
-      for (const adjacentIdx of that.getAdjacentCellIndices(cellIndex)) {
+      for (const adjacentIdx of that.boardNavigator.getAdjacentCellIndices(
+        cellIndex
+      )) {
         revealCells(adjacentIdx, visitedCells, false);
       }
     }
@@ -436,47 +449,6 @@ class GameController {
         }
       }
     }
-  }
-
-  /* --- helpers --- */
-
-  *getAdjacentCellIndices(cellIndex, includeSelf = false) {
-    const cellCoord = this.getCellCoord(cellIndex);
-    for (let col = -1; col <= 1; ++col) {
-      for (let row = -1; row <= 1; ++row) {
-        if (!includeSelf && col === 0 && row === 0) {
-          continue;
-        }
-
-        const adjacentIndex = this.getCellIndex(
-          cellCoord.col + col,
-          cellCoord.row + row
-        );
-        if (adjacentIndex >= 0) {
-          yield adjacentIndex;
-        }
-      }
-    }
-  }
-
-  getCellCoord(index) {
-    return {
-      col: index % this.difficulty.colCount,
-      row: Math.floor(index / this.difficulty.colCount),
-    };
-  }
-
-  getCellIndex(col, row) {
-    if (
-      col < 0 ||
-      col >= this.difficulty.colCount ||
-      row < 0 ||
-      row >= this.difficulty.rowCount
-    ) {
-      return -1;
-    }
-
-    return col + row * this.difficulty.colCount;
   }
 }
 
