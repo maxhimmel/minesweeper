@@ -6,6 +6,7 @@ import {
   LOSE_FACES,
   WIN_FACES,
 } from "./constants.js";
+import { FlagPreviewController } from "./flagPreviewController.js";
 import { shuffle, getRandomItem } from "./randomHelpers.js";
 import {
   getTextAsScore,
@@ -26,8 +27,6 @@ class GameController {
     );
     this.shuffledIndices = [];
     this.hasPlacedMines = false;
-    this.isFlagPreviewMode = false;
-    this.flagPreviewIndex = -1;
     this.losingCellIndex = -1;
     this.cellClickEventHandler = this.handleCellClick.bind(this);
 
@@ -52,6 +51,9 @@ class GameController {
         this.init();
       }
     });
+
+    const flagPreview = new FlagPreviewController(this.boardElem);
+    flagPreview.eventEmitter.on("render", this.renderFlagPreview.bind(this));
 
     this.cheats = new CheatController(this);
   }
@@ -310,65 +312,23 @@ class GameController {
     }
   }
 
+  renderFlagPreview(requestPreview, cellIndex) {
+    if (!this.hasPlacedMines || this.cheats.enableShowMines) {
+      return;
+    }
+
+    const cell = this.board.getCell(cellIndex);
+    if (cell.isRevealed || cell.isFlagged) {
+      return;
+    }
+
+    const element = this.cellElems[cellIndex];
+    element.innerHTML = requestPreview ? getFlagIcon() : "";
+  }
+
   /* --- */
 
   initPreviewRendering() {
-    const that = this;
-
-    window.addEventListener("keydown", handleFlagPreviewMode.bind(this));
-    window.addEventListener("keyup", handleFlagPreviewMode.bind(this));
-    function handleFlagPreviewMode(evt) {
-      if (evt.key === "Alt") {
-        if (evt.type === "keydown") {
-          this.isFlagPreviewMode = true;
-        } else if (evt.type === "keyup") {
-          this.isFlagPreviewMode = false;
-        }
-
-        renderFlagPreview(this.isFlagPreviewMode, this.flagPreviewIndex);
-      }
-    }
-
-    this.boardElem.addEventListener(
-      "mouseover",
-      handleFlagPreviewSelection.bind(this)
-    );
-    this.boardElem.addEventListener(
-      "mouseout",
-      handleFlagPreviewSelection.bind(this)
-    );
-    function handleFlagPreviewSelection(evt) {
-      if (evt.target.classList.contains("cell")) {
-        const cellIndex = this.cellElems.indexOf(evt.target);
-
-        if (evt.type === "mouseover") {
-          this.flagPreviewIndex = cellIndex;
-          renderFlagPreview(this.isFlagPreviewMode, this.flagPreviewIndex);
-        } else if (evt.type === "mouseout") {
-          renderFlagPreview(false, this.flagPreviewIndex);
-          this.flagPreviewIndex = -1;
-        }
-      }
-    }
-
-    function renderFlagPreview(requestPreview, cellIndex) {
-      if (!that.hasPlacedMines || that.cheats.enableShowMines) {
-        return;
-      }
-
-      if (cellIndex < 0) {
-        return;
-      }
-
-      const cell = that.board.getCell(cellIndex);
-      if (cell.isRevealed || cell.isFlagged) {
-        return;
-      }
-
-      const element = that.cellElems[cellIndex];
-      element.innerHTML = requestPreview ? getFlagIcon() : "";
-    }
-
     window.addEventListener("mousedown", renderGuessFace.bind(this));
     window.addEventListener("mouseup", renderGuessFace.bind(this));
     function renderGuessFace(evt) {
