@@ -24,6 +24,7 @@
   --face-color-content: black;
   --highlight-color: whitesmoke;
   --tab-width: 110px;
+  --popup-max-width: 500px;
 }
 
 .ignore-mouse {
@@ -206,8 +207,8 @@ nav > menu {
   white-space: nowrap;
   max-width: var(--tab-width);
 
-  transition-duration: 300ms;
-  transition-timing-function: cubic-bezier(0.47, 1.64, 0.41, 0.8);
+  /* transition-duration: 300ms;
+  transition-timing-function: cubic-bezier(0.47, 1.64, 0.41, 0.8); */
 }
 
 /* this hide the navbar's border when bouncing */
@@ -237,7 +238,7 @@ nav > menu {
 
 .popout:has(.tab + input:checked) {
   transform: translateY(0);
-  max-width: 100dvw;
+  max-width: var(--popup-max-width);
 }
 
 /* .popout:has(.tab + input:checked), */
