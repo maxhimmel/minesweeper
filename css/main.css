@@ -192,6 +192,7 @@ nav > menu {
 }
 
 .popout {
+  position: relative;
   background-color: var(--face-color);
   border: 0.5rem groove var(--border-color);
   border-top-width: 0;
@@ -205,8 +206,16 @@ nav > menu {
   white-space: nowrap;
   max-width: var(--tab-width);
 
-  /* transition-duration: 300ms;
-  transition-timing-function: cubic-bezier(0.47, 1.64, 0.41, 0.8); */
+  transition-duration: 300ms;
+  transition-timing-function: cubic-bezier(0.47, 1.64, 0.41, 0.8);
+}
+
+/* this hide the navbar's border when bouncing */
+.popout::before {
+  content: "";
+  position: absolute;
+  inset: -100dvh -0.5rem 100% -0.5rem;
+  background-color: inherit;
 }
 
 .popout *:not(.tab) {
