@@ -4,5 +4,4 @@ main();
 
 function main() {
   gameController.init();
-  gameController.initPreviewRendering();
 }

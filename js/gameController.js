@@ -7,6 +7,7 @@ import {
   WIN_FACES,
 } from "./constants.js";
 import { FlagPreviewController } from "./flagPreviewController.js";
+import { GuessFaceController } from "./guessFaceController.js";
 import { shuffle, getRandomItem } from "./randomHelpers.js";
 import {
   getTextAsScore,
@@ -54,6 +55,9 @@ class GameController {
 
     const flagPreview = new FlagPreviewController(this.boardElem);
     flagPreview.eventEmitter.on("render", this.renderFlagPreview.bind(this));
+
+    const renderGuessFace = new GuessFaceController();
+    renderGuessFace.eventEmitter.on("render", this.renderGuessFace.bind(this));
 
     this.cheats = new CheatController(this);
   }
@@ -326,29 +330,16 @@ class GameController {
     element.innerHTML = requestPreview ? getFlagIcon() : "";
   }
 
-  /* --- */
+  renderGuessFace(isClickingBoard, target) {
+    if (this.gameState !== "PLAYING") {
+      return;
+    }
 
-  initPreviewRendering() {
-    window.addEventListener("mousedown", renderGuessFace.bind(this));
-    window.addEventListener("mouseup", renderGuessFace.bind(this));
-    function renderGuessFace(evt) {
-      if (evt.altKey || evt.shiftKey) {
-        return;
-      }
-
-      if (this.gameState !== "PLAYING") {
-        return;
-      }
-
-      const isClickingBoard =
-        evt.type === "mousedown" && evt.target.matches("#board, .cell");
-
-      if (isClickingBoard) {
-        this.resetBtn.innerText = getRandomItem(GUESS_FACES);
-        this.cheats.handlePeeking(evt.target);
-      } else if (evt.type === "mouseup") {
-        this.resetBtn.innerText = "🙂";
-      }
+    if (isClickingBoard) {
+      this.resetBtn.innerText = getRandomItem(GUESS_FACES);
+      this.cheats.handlePeeking(target);
+    } else {
+      this.resetBtn.innerText = "🙂";
     }
   }
 }
