@@ -136,18 +136,8 @@ class GameController {
       return false;
     }
 
-    const cell = this.board.getCell(cellIndex);
-
-    if (cell.isFlaggable()) {
-      if (cell.isFlagged) {
-        if (this.hasPlacedMines) {
-          cell.isFlagged = false;
-        }
-      } else {
-        if (this.hasPlacedMines) {
-          cell.isFlagged = true;
-        }
-      }
+    if (this.hasPlacedMines) {
+      this.board.toggleFlag(cellIndex);
     }
 
     return true;
@@ -307,10 +297,8 @@ class GameController {
   }
 
   renderScoreboard() {
-    // TODO: optimize flag counting ...
-    const placedFlags = this.board.board.filter((c) => c.isFlagged).length;
     this.flagsElem.textContent = getTextAsScore(
-      this.difficulty.mineCount - placedFlags
+      this.difficulty.mineCount - this.board.flagCount
     );
 
     if (this.gameState === "PLAYING") {
