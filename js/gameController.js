@@ -1,4 +1,5 @@
 import { BoardController } from "./boardController.js";
+import { CheatController } from "./cheatController.js";
 import {
   DIFFICULTIES,
   GUESS_FACES,
@@ -52,8 +53,7 @@ class GameController {
       }
     });
 
-    this.enablePeekCheat = false;
-    this.enableShowMinesCheat = false;
+    this.cheats = new CheatController(this);
   }
 
   init() {
@@ -262,7 +262,7 @@ class GameController {
 
     this.renderScoreboard();
 
-    this.handleShowMinesCheat();
+    this.cheats.handleShowMines();
   }
 
   renderCell(cellIndex) {
@@ -352,7 +352,7 @@ class GameController {
     }
 
     function renderFlagPreview(requestPreview, cellIndex) {
-      if (that.enableShowMinesCheat || !that.hasPlacedMines) {
+      if (!that.hasPlacedMines || that.cheats.enableShowMines) {
         return;
       }
 
@@ -385,48 +385,9 @@ class GameController {
 
       if (isClickingBoard) {
         this.resetBtn.innerText = getRandomItem(GUESS_FACES);
-        this.handlePeekCheat(evt.target);
+        this.cheats.handlePeeking(evt.target);
       } else if (evt.type === "mouseup") {
         this.resetBtn.innerText = "🙂";
-      }
-    }
-  }
-
-  /* --- cheats ---*/
-
-  initCheats() {
-    document.getElementById("peeker").addEventListener("change", (evt) => {
-      this.enablePeekCheat = evt.target.checked;
-    });
-
-    document.getElementById("show-mines").addEventListener("change", (evt) => {
-      this.enableShowMinesCheat = evt.target.checked;
-      this.render();
-    });
-  }
-
-  handlePeekCheat(clickedElement) {
-    if (this.enablePeekCheat) {
-      const cellIndex = this.cellElems.indexOf(clickedElement);
-      if (cellIndex >= 0) {
-        if (this.board.getCell(cellIndex).isMine()) {
-          this.resetBtn.innerText = "🫣";
-        }
-      }
-    }
-  }
-
-  handleShowMinesCheat() {
-    if (this.enableShowMinesCheat) {
-      for (let idx = 0; idx < this.board.length; ++idx) {
-        const cell = this.board.getCell(idx);
-        const cellElem = this.cellElems[idx];
-
-        if (cell.isMine() && !cell.isFlagged) {
-          cellElem.innerHTML = getMineIcon();
-        } else if (cell.isSafe() && cell.isFlagged) {
-          cellElem.innerHTML = getMisplacedFlagIcon();
-        }
       }
     }
   }
