@@ -7,7 +7,7 @@ export function getFlagIcon() {
 }
 
 export function getMineIcon() {
-  return `<div class="mine"></div>`;
+  return `<div class="mine ignore-mouse"></div>`;
 }
 
 export function getAdjacentMineIcon(adjacencyCount) {
