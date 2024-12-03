@@ -6,19 +6,16 @@
 
 - 8x8 or 9x9
 - 10 mines
-- 8.1%
 
 ### Medium
 
 - 16x16
 - 40 mines
-- 6.4% | $(16 * 16) / 6.4 = 40$
 
 ### Hard
 
 - 30x16
 - 99 mines
-- 4.84%
 
 ## Pseudo Code
 
@@ -53,3 +50,9 @@
 ## Resources
 
 [Sprite Sheet](https://www.spriters-resource.com/pc_computer/minesweeper/sheet/19849/)
+
+## Ideas
+
+- Sonar
+  - Send out a limited number of pings.
+  - Maybe you can "pick up"/find sonar uses.
