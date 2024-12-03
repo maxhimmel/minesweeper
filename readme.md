@@ -45,7 +45,7 @@
 
 ## Wireframe
 
-<img src="./images/Minesweeper Wireframe.svg" style="background-color: lime" alt="wireframe"/>
+<img src="./images/Minesweeper Wireframe.svg" alt="wireframe"/>
 
 ## Resources
 
