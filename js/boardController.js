@@ -1,5 +1,6 @@
 import { BoardNavigator } from "./boardNavigator.js";
 import { Cell } from "./cell.js";
+import { FlagController } from "./flagController.js";
 
 export class BoardController {
   constructor(columnCount, rowCount) {
@@ -8,7 +9,7 @@ export class BoardController {
       { length: this.navigator.length },
       (_, index) => new Cell()
     );
-    this.flagCount = 0;
+    this.flags = new FlagController();
   }
 
   toggleFlag(index) {
@@ -17,7 +18,11 @@ export class BoardController {
     if (!cell.isRevealed) {
       cell.isFlagged = !cell.isFlagged;
 
-      this.flagCount += cell.isFlagged ? 1 : -1;
+      if (cell.isFlagged) {
+        this.flags.add(index);
+      } else {
+        this.flags.remove(index);
+      }
     }
 
     return cell.isFlagged;
@@ -27,7 +32,15 @@ export class BoardController {
     return this.board[index];
   }
 
+  flaggedIndices() {
+    return this.flags.getIndices();
+  }
+
   get length() {
     return this.board.length;
+  }
+
+  get flagCount() {
+    return this.flags.count;
   }
 }

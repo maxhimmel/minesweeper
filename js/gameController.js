@@ -287,7 +287,7 @@ class GameController {
     const losingElem = this.cellElems[this.losingCellIndex];
     losingElem.style = "background-color: yellow";
 
-    for (let idx = 0; idx < this.board.length; ++idx) {
+    for (const idx of this.board.flaggedIndices()) {
       const cell = this.board.getCell(idx);
       if (cell.isSafe() && cell.isFlagged) {
         const cellElem = this.cellElems[idx];
