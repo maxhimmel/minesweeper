@@ -1,11 +1,10 @@
-import { BoardNavigator } from "./boardNavigator.js";
+import { BoardController } from "./boardController.js";
 import {
   DIFFICULTIES,
   GUESS_FACES,
   LOSE_FACES,
   WIN_FACES,
 } from "./constants.js";
-import { FlagController } from "./flagController.js";
 import { shuffle, getRandomItem } from "./randomHelpers.js";
 import {
   getTextAsScore,
@@ -19,20 +18,18 @@ import { TimerController } from "./timerController.js";
 class GameController {
   constructor() {
     this.gameState = "PLAYING";
-    this.board = [];
-    this.boardSolution = [];
-    this.shuffledIndices = [];
-    this.hasPlacedMines = false;
     this.difficulty = DIFFICULTIES.easy;
-    this.isFlagPreviewMode = false;
-    this.flagPreviewIndex = -1;
-    this.losingCellIndex = -1;
-
-    this.flagController = new FlagController();
-    this.boardNavigator = new BoardNavigator(
+    this.board = new BoardController(
       this.difficulty.colCount,
       this.difficulty.rowCount
     );
+    this.shuffledIndices = [];
+    this.hasPlacedMines = false;
+    this.isFlagPreviewMode = false;
+    this.flagPreviewIndex = -1;
+    this.losingCellIndex = -1;
+    this.cellClickEventHandler = this.handleCellClick.bind(this);
+
     this.timerController = new TimerController(1000, "#timer", "#timer + div");
 
     this.boardElem = document.getElementById("board");
@@ -40,8 +37,6 @@ class GameController {
     this.cellElems = [];
     this.flagsElem = document.getElementById("flags");
     this.resetBtn = document.getElementById("reset");
-
-    this.cellClickEventHandler = this.handleCellClick.bind(this);
 
     this.resetBtn.addEventListener("click", this.init.bind(this));
     this.difficultyElem.addEventListener("click", (evt) => {
@@ -63,7 +58,6 @@ class GameController {
 
   init() {
     this.clearState();
-    this.timerController.timer.clear();
     this.initBoard();
 
     this.boardElem.removeEventListener("click", this.cellClickEventHandler);
@@ -76,26 +70,25 @@ class GameController {
     this.gameState = "PLAYING";
     this.hasPlacedMines = false;
     this.losingCellIndex = -1;
-    this.flagController.clear();
-    this.board.splice(0, this.board.length);
-    this.boardSolution.splice(0, this.boardSolution.length);
-    this.shuffledIndices.splice(0, this.shuffledIndices.length);
+    this.timerController.timer.clear();
   }
 
   initBoard() {
-    this.boardNavigator = new BoardNavigator(
+    this.board = new BoardController(
       this.difficulty.colCount,
       this.difficulty.rowCount
     );
+
+    this.shuffledIndices = Array.from(
+      { length: this.board.length },
+      (_, index) => index
+    );
+
     this.boardElem.innerHTML = null;
     this.cellElems.splice(0, this.cellElems.length);
-    this.boardElem.style.gridTemplateColumns = `repeat(${this.boardNavigator.colCount}, 1fr)`;
+    this.boardElem.style.gridTemplateColumns = `repeat(${this.board.navigator.colCount}, 1fr)`;
 
-    for (let idx = 0; idx < this.boardNavigator.length; ++idx) {
-      this.board.push(null);
-      this.boardSolution.push(0);
-      this.shuffledIndices.push(idx);
-
+    for (let idx = 0; idx < this.board.length; ++idx) {
       this.addCellElement();
     }
   }
@@ -114,6 +107,8 @@ class GameController {
     }
 
     const cellIndex = this.cellElems.indexOf(evt.target);
+    const cell = this.board.getCell(cellIndex);
+
     this.losingCellIndex = cellIndex;
 
     if (!this.tryHandleFlagToggle(evt, cellIndex)) {
@@ -122,7 +117,7 @@ class GameController {
         this.timerController.timer.restart();
       }
 
-      if (!this.flagController.has(cellIndex)) {
+      if (!cell.isFlagged) {
         if (evt.shiftKey) {
           this.chordCell(cellIndex);
         } else {
@@ -141,18 +136,16 @@ class GameController {
       return false;
     }
 
-    const cellValue = this.board[cellIndex];
-    const isFlaggable = cellValue < 0 || cellValue === null;
+    const cell = this.board.getCell(cellIndex);
 
-    if (isFlaggable) {
-      if (this.flagController.tryRemove(cellIndex)) {
+    if (cell.isFlaggable()) {
+      if (cell.isFlagged) {
         if (this.hasPlacedMines) {
-          this.board[cellIndex] = null;
+          cell.isFlagged = false;
         }
       } else {
-        this.flagController.add(cellIndex);
         if (this.hasPlacedMines) {
-          this.board[cellIndex] = -1;
+          cell.isFlagged = true;
         }
       }
     }
@@ -162,10 +155,9 @@ class GameController {
 
   generateMines(safeCellIndex) {
     this.hasPlacedMines = true;
-    this.flagController.clear();
 
     // Remove a pocket of cells from mine selection ...
-    for (const adjacentIdx of this.boardNavigator.getAdjacentCellIndices(
+    for (const adjacentIdx of this.board.navigator.getAdjacentCellIndices(
       safeCellIndex,
       true
     )) {
@@ -176,13 +168,14 @@ class GameController {
 
     for (let idx = 0; idx < this.difficulty.mineCount; ++idx) {
       const mine = this.shuffledIndices[idx];
-      this.boardSolution[mine] = -1;
+      this.board.getCell(mine).setMine();
 
-      for (const adjacentIdx of this.boardNavigator.getAdjacentCellIndices(
+      for (const adjacentIdx of this.board.navigator.getAdjacentCellIndices(
         mine
       )) {
-        if (this.boardSolution[adjacentIdx] >= 0) {
-          ++this.boardSolution[adjacentIdx];
+        const adjacentCell = this.board.getCell(adjacentIdx);
+        if (adjacentCell.isSafe()) {
+          ++adjacentCell.adjacentMineCount;
         }
       }
     }
@@ -190,21 +183,22 @@ class GameController {
 
   // Why name it "chord"? https://en.wikipedia.org/wiki/Chording#Minesweeper_tactic
   chordCell(cellIndex) {
-    const cellValue = this.board[cellIndex];
-    if (!cellValue) {
+    const cell = this.board.getCell(cellIndex);
+    if (!cell.isRevealed) {
       return;
     }
 
     let flagSum = 0;
-    for (const adjacentIdx of this.boardNavigator.getAdjacentCellIndices(
+    for (const adjacentIdx of this.board.navigator.getAdjacentCellIndices(
       cellIndex
     )) {
-      if (this.flagController.has(adjacentIdx)) {
+      const adjacentCell = this.board.getCell(adjacentIdx);
+      if (adjacentCell.isFlagged) {
         ++flagSum;
       }
     }
 
-    if (flagSum === cellValue) {
+    if (flagSum === cell.adjacentMineCount) {
       this.revealCell(cellIndex, true);
     }
   }
@@ -218,26 +212,26 @@ class GameController {
         return;
       }
 
-      if (that.flagController.has(cellIndex)) {
+      const cell = that.board.getCell(cellIndex);
+      if (cell.isFlagged) {
         return;
       }
 
-      const cellValue = that.boardSolution[cellIndex];
-      that.board[cellIndex] = cellValue;
+      cell.isRevealed = true;
 
-      // Hit a mine!
-      if (cellValue < 0) {
+      if (cell.isMine()) {
         that.gameState = "LOSE";
         return;
       }
 
       // Hit a mine-adjacent cell!
-      if (!ignoreInitial && cellValue > 0) {
+      //TODO: add better language here? --> .isSafe() DOES NOT WORK HERE
+      if (!ignoreInitial && cell.adjacentMineCount > 0) {
         return;
       }
 
       // Jackpot!
-      for (const adjacentIdx of that.boardNavigator.getAdjacentCellIndices(
+      for (const adjacentIdx of that.board.navigator.getAdjacentCellIndices(
         cellIndex
       )) {
         revealCells(adjacentIdx, visitedCells, false);
@@ -247,24 +241,21 @@ class GameController {
 
   handleGameOver() {
     if (this.gameState === "PLAYING") {
-      for (let idx = 0; idx < this.boardSolution.length; ++idx) {
-        const lhs = this.board[idx];
-        const rhs = this.boardSolution[idx];
-
-        if (lhs !== rhs) {
-          // Board doesn't match solution, so we're still playing ...
+      for (let idx = 0; idx < this.board.length; ++idx) {
+        const cell = this.board.getCell(idx);
+        if (!cell.isRevealed && !cell.isFlagged) {
           return;
         }
       }
 
       this.gameState = "WIN";
     } else if (this.gameState === "LOSE") {
-      // Update the user's board w/mines ...
-      this.boardSolution.forEach((cellValue, idx) => {
-        if (cellValue < 0) {
-          this.board[idx] = cellValue;
+      for (let idx = 0; idx < this.board.length; ++idx) {
+        const cell = this.board.getCell(idx);
+        if (cell.isMine()) {
+          cell.isRevealed = true;
         }
-      });
+      }
     }
 
     this.timerController.timer.stop();
@@ -287,19 +278,19 @@ class GameController {
 
   renderCell(cellIndex) {
     const cellElem = this.cellElems[cellIndex];
-    const cellValue = this.board[cellIndex];
+    const cell = this.board.getCell(cellIndex);
 
     cellElem.innerHTML = "";
+    cellElem.classList.toggle("pressed", cell.isRevealed && !cell.isFlagged);
 
-    const isMarked = cellValue !== null && !this.flagController.has(cellIndex);
-    cellElem.classList.toggle("pressed", isMarked);
-
-    if (this.flagController.has(cellIndex)) {
+    if (cell.isFlagged) {
       cellElem.innerHTML = getFlagIcon();
-    } else if (cellValue > 0) {
-      cellElem.innerHTML = getAdjacentMineIcon(cellValue);
-    } else if (cellValue < 0) {
-      cellElem.innerHTML = getMineIcon();
+    } else if (cell.isRevealed) {
+      if (cell.adjacentMineCount > 0) {
+        cellElem.innerHTML = getAdjacentMineIcon(cell.adjacentMineCount);
+      } else if (cell.isMine()) {
+        cellElem.innerHTML = getMineIcon();
+      }
     }
   }
 
@@ -307,8 +298,9 @@ class GameController {
     const losingElem = this.cellElems[this.losingCellIndex];
     losingElem.style = "background-color: yellow";
 
-    for (const idx of this.flagController.getIndices()) {
-      if (this.boardSolution[idx] !== -1) {
+    for (let idx = 0; idx < this.board.length; ++idx) {
+      const cell = this.board.getCell(idx);
+      if (cell.isSafe() && cell.isFlagged) {
         const cellElem = this.cellElems[idx];
         cellElem.innerHTML = getMisplacedFlagIcon();
       }
@@ -316,8 +308,10 @@ class GameController {
   }
 
   renderScoreboard() {
+    // TODO: optimize flag counting ...
+    const placedFlags = this.board.board.filter((c) => c.isFlagged).length;
     this.flagsElem.textContent = getTextAsScore(
-      this.difficulty.mineCount - this.flagController.count
+      this.difficulty.mineCount - placedFlags
     );
 
     if (this.gameState === "PLAYING") {
@@ -371,7 +365,7 @@ class GameController {
     }
 
     function renderFlagPreview(requestPreview, cellIndex) {
-      if (that.enableShowMinesCheat) {
+      if (that.enableShowMinesCheat || !that.hasPlacedMines) {
         return;
       }
 
@@ -379,10 +373,8 @@ class GameController {
         return;
       }
 
-      if (
-        that.board[cellIndex] !== null ||
-        that.flagController.has(cellIndex)
-      ) {
+      const cell = that.board.getCell(cellIndex);
+      if (cell.isRevealed || cell.isFlagged) {
         return;
       }
 
@@ -430,7 +422,7 @@ class GameController {
     if (this.enablePeekCheat) {
       const cellIndex = this.cellElems.indexOf(clickedElement);
       if (cellIndex >= 0) {
-        if (this.boardSolution[cellIndex] < 0) {
+        if (this.board.getCell(cellIndex).isMine()) {
           this.resetBtn.innerText = "🫣";
         }
       }
@@ -439,14 +431,13 @@ class GameController {
 
   handleShowMinesCheat() {
     if (this.enableShowMinesCheat) {
-      for (let idx = 0; idx < this.boardSolution.length; ++idx) {
-        const cellValue = this.boardSolution[idx];
+      for (let idx = 0; idx < this.board.length; ++idx) {
+        const cell = this.board.getCell(idx);
         const cellElem = this.cellElems[idx];
-        const isFlagged = this.flagController.has(idx);
 
-        if (cellValue < 0 && !isFlagged) {
+        if (cell.isMine() && !cell.isFlagged) {
           cellElem.innerHTML = getMineIcon();
-        } else if (cellValue >= 0 && isFlagged) {
+        } else if (cell.isSafe() && cell.isFlagged) {
           cellElem.innerHTML = getMisplacedFlagIcon();
         }
       }
