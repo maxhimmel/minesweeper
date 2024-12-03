@@ -24,4 +24,8 @@ export class Cell {
   isFlaggable() {
     return !this.isRevealed;
   }
+
+  isTouchingMine() {
+    return this.adjacentMineCount > 0;
+  }
 }

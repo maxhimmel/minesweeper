@@ -225,8 +225,7 @@ class GameController {
       }
 
       // Hit a mine-adjacent cell!
-      //TODO: add better language here? --> .isSafe() DOES NOT WORK HERE
-      if (!ignoreInitial && cell.adjacentMineCount > 0) {
+      if (!ignoreInitial && cell.isTouchingMine()) {
         return;
       }
 
@@ -286,7 +285,7 @@ class GameController {
     if (cell.isFlagged) {
       cellElem.innerHTML = getFlagIcon();
     } else if (cell.isRevealed) {
-      if (cell.adjacentMineCount > 0) {
+      if (cell.isTouchingMine()) {
         cellElem.innerHTML = getAdjacentMineIcon(cell.adjacentMineCount);
       } else if (cell.isMine()) {
         cellElem.innerHTML = getMineIcon();
