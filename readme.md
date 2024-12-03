@@ -51,6 +51,8 @@
 
 [Sprite Sheet](https://www.spriters-resource.com/pc_computer/minesweeper/sheet/19849/)
 
+- (This was used as a reference while styling, but no assets were actually used.)
+
 ## Ideas
 
 - Sonar
