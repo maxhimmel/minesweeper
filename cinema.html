@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minesweeper</title>
+
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/icons.css" />
+    <link rel="stylesheet" href="css/patterns.css" />
+
+    <script defer src="js/cinema.js" type="module"></script>
+  </head>
+  <body class="pattern-rain">
+    <main>
+      <section class="container" style="width: 800px; height: 400px">
+        <div id="board"></div>
+      </section>
+    </main>
+    <footer
+      id="debug"
+      style="
+        position: absolute;
+        inset: 0;
+        top: 90%;
+        background-color: white;
+        display: flex;
+        gap: 2rem;
+      "
+    >
+      <label>
+        Pressed Numbers
+        <input type="checkbox" id="pressed-nums" name="pressed-nums" />
+      </label>
+    </footer>
+  </body>
+</html>
