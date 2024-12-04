@@ -2,6 +2,10 @@
  
 # MINESWEEPER
 
+<div id="header" align="center">
+  <img src="https://i.imgur.com/y2SPx4E.jpg" width="800" height="400">
+</div>
+
 **Created by [Max Himmel](https://www.linkedin.com/in/maxhimmel/)**
 
 #### [PLAY HERE](https://maxhimmel.github.io/ga-minesweeper)
