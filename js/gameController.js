@@ -1,4 +1,4 @@
-import { BoardController } from "./boardController.js";
+import { BoardController } from "./data/boardController.js";
 import { CheatController } from "./cheatController.js";
 import {
   DIFFICULTIES,
