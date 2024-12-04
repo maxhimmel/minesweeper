@@ -8,11 +8,13 @@
 
 # Minesweeper
 
-### [CLICK TO DEMO](https://maxhimmel.github.io/ga-minesweeper/)
+### [PLAY HERE](https://maxhimmel.github.io/ga-minesweeper/)
 
 #### Max Himmel
 
 ![Javascript Badge](https://img.shields.io/badge/-JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black) ![CSS Badge](https://img.shields.io/badge/-CSS-1572B6?style=flat&logo=css3&logoColor=black) ![HTML Badge](https://img.shields.io/badge/-HTML-E34F26?style=flat&logo=html5&logoColor=black)
+
+</div>
 
 ## :pencil: Description
 
@@ -21,20 +23,26 @@ mini-surveys. By learning about others' backgrounds, previous experiences, and
 interests, an atmosphere of community is created that is conducive to higher
 levels of learning and success.
 
-</div>
+## :camera_flash: Screenshots
 
-# Technologies Used
+|             Description              | Screenshot                                                                                                                  |
+| :----------------------------------: | --------------------------------------------------------------------------------------------------------------------------- |
+|          <h3>Feed Page</h3>          | <img src="https://github.com/amarpan/meet-your-classmates/blob/main/public/Screenshots/FeedPage.png?raw=true" width="700"/> |
+| <h3 align="center">Profile Page</h3> | <img src="https://github.com/amarpan/meet-your-classmates/raw/main/public/Screenshots/ProfilePage.png" width="700"/>        |
 
-- JavaScript
-- HTML
-- CSS
+## :computer: Technologies Used
 
-# Next Steps
+![JavaScript](https://img.shields.io/badge/-JavaScript-05122A?style=flat&logo=javascript)
+![HTML5](https://img.shields.io/badge/-HTML5-05122A?style=flat&logo=html5)
+![CSS3](https://img.shields.io/badge/-CSS-05122A?style=flat&logo=css3)
 
-- Sonar
+## :satellite: Upcoming Features
+
+- [ ] Fix unsolvable mine generation
+
+- [ ] Sonar
   - Send out a limited number of pings.
   - Maybe you can "pick up"/find sonar uses.
-- Fix unsolvable mine generation
 
 ## Difficulties
 
