@@ -1,3 +1,4 @@
+import { BoardNavigator } from "./data/boardNavigator.js";
 import { getRandomItem } from "./lib/randomHelpers.js";
 import {
   getAdjacentMineIcon,
@@ -25,6 +26,21 @@ const COL_COUNT = 20;
 const ROW_COUNT = 9;
 
 const OPTIONS = {
+  "show-overlay": {
+    prettyName: "Show Overlay",
+    type: "checkbox",
+    changeCallback: (evt) => {
+      showOverlay(evt.target.checked);
+    },
+    init: () => {
+      const defaultValue = false;
+
+      showOverlay(defaultValue);
+
+      document.getElementById("show-overlay").checked = defaultValue;
+    },
+  },
+
   "pressed-nums": {
     prettyName: "Pressed Numbers",
     type: "checkbox",
@@ -44,16 +60,38 @@ const OPTIONS = {
     },
   },
 
+  "apply-pressed-all": {
+    prettyName: "Apply Pressed Style To All",
+    type: "checkbox",
+    changeCallback: (evt) => {
+      applyPressedToAllCells = evt.target.checked;
+
+      for (const cell of cellElems) {
+        togglePressedStyle(cell, applyPressedToAllCells, true);
+      }
+    },
+    init: () => {
+      const defaultValue = true;
+
+      applyPressedToAllCells = defaultValue;
+      for (const cell of cellElems) {
+        togglePressedStyle(cell, applyPressedToAllCells, true);
+      }
+
+      document.getElementById("apply-pressed-all").checked = defaultValue;
+    },
+  },
+
   "anim-speed": {
     prettyName: "Animation Speed",
     type: "number",
     changeCallback: (evt) => {
-      randomAnimateCells(evt.target.value);
+      waveAnimateCells(evt.target.value);
     },
     init: () => {
       const defaultValue = 70;
 
-      randomAnimateCells(defaultValue);
+      waveAnimateCells(defaultValue);
 
       document.getElementById("anim-speed").value = defaultValue;
     },
@@ -63,9 +101,11 @@ const OPTIONS = {
 let cellElems = [];
 let overlayCellElems = [];
 let animateCellHandle = null;
+let applyPressedToAllCells = false;
 const boardElem = document.getElementById("board");
 const overlayElem = document.getElementById("board-overlay");
 const debugContainer = document.getElementById("debug");
+const navigator = new BoardNavigator(COL_COUNT, ROW_COUNT);
 
 boardElem.style.gridTemplateColumns = `repeat(${COL_COUNT}, 1fr)`;
 overlayElem.style.gridTemplateColumns = `repeat(${COL_COUNT}, 1fr)`;
@@ -90,7 +130,6 @@ function initOverlay() {
   for (let idx = 0; idx < COL_COUNT * ROW_COUNT; ++idx) {
     const overlayCell = document.createElement("button");
     overlayCell.classList.add("cell");
-    overlayCell.style.visibility = "hidden";
 
     overlayElem.append(overlayCell);
     overlayCellElems.push(overlayCell);
@@ -125,9 +164,20 @@ function initDebugOptions() {
 
 /* --- */
 
-function togglePressedStyle(cell, isPressed) {
+function showOverlay(show) {
+  for (let idx = 0; idx < overlayCellElems.length; ++idx) {
+    const overlayCell = overlayCellElems[idx];
+    overlayCell.style.visibility = show ? "visible" : "hidden";
+  }
+}
+
+function togglePressedStyle(cell, isPressed, updateAll = false) {
   const childDiv = cell.querySelector("div");
-  if (childDiv?.className.includes("mine-")) {
+  if (
+    updateAll ||
+    applyPressedToAllCells ||
+    childDiv?.className.includes("mine-")
+  ) {
     cell.classList.toggle("pressed", isPressed);
   }
 }
@@ -144,5 +194,13 @@ function randomAnimateCells(speed) {
 
     // randOverlayCell.style.visibility =
     //   Math.random() > 0.5 ? "visible" : "hidden";
+  }, speed);
+}
+
+function waveAnimateCells(speed) {
+  clearInterval(animateCellHandle);
+
+  animateCellHandle = setInterval(() => {
+    for (let idx = 0; idx < navigator.length; ++idx) {}
   }, speed);
 }
