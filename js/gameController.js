@@ -6,8 +6,8 @@ import {
   LOSE_FACES,
   WIN_FACES,
 } from "./constants.js";
-import { FlagPreviewController } from "./flagPreviewController.js";
-import { GuessFaceController } from "./guessFaceController.js";
+import { FlagPreviewController } from "./ui/flagPreviewController.js";
+import { GuessFaceController } from "./ui/guessFaceController.js";
 import { shuffle, getRandomItem } from "./lib/randomHelpers.js";
 import {
   getTextAsScore,
@@ -15,8 +15,8 @@ import {
   getFlagIcon,
   getMineIcon,
   getMisplacedFlagIcon,
-} from "./styleHelpers.js";
-import { TimerController } from "./timerController.js";
+} from "./ui/styleHelpers.js";
+import { TimerController } from "./ui/timerController.js";
 
 class GameController {
   constructor() {

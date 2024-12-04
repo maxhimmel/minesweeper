@@ -1,5 +1,5 @@
-import { getIndexOfChild } from "./lib/domHelpers.js";
-import { EventEmitter } from "./lib/eventEmitter.js";
+import { getIndexOfChild } from "../lib/domHelpers.js";
+import { EventEmitter } from "../lib/eventEmitter.js";
 
 export class FlagPreviewController {
   constructor(boardElement) {

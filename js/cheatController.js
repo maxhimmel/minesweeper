@@ -1,4 +1,4 @@
-import { getMineIcon, getMisplacedFlagIcon } from "./styleHelpers.js";
+import { getMineIcon, getMisplacedFlagIcon } from "./ui/styleHelpers.js";
 
 export class CheatController {
   // NOTE: I understand this has some terrible mutual dependency, but it's cheats!

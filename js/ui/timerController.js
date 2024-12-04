@@ -1,5 +1,5 @@
 import { getTextAsScore } from "./styleHelpers.js";
-import { Timer } from "./lib/timer.js";
+import { Timer } from "../lib/timer.js";
 
 export class TimerController {
   constructor(tickRate, timerElementSelector, timerIconSelector) {
