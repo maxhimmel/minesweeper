@@ -8,7 +8,7 @@ import {
 } from "./constants.js";
 import { FlagPreviewController } from "./flagPreviewController.js";
 import { GuessFaceController } from "./guessFaceController.js";
-import { shuffle, getRandomItem } from "./randomHelpers.js";
+import { shuffle, getRandomItem } from "./lib/randomHelpers.js";
 import {
   getTextAsScore,
   getAdjacentMineIcon,

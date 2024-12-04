@@ -1,4 +1,4 @@
-import { EventEmitter } from "./eventEmitter.js";
+import { EventEmitter } from "./lib/eventEmitter.js";
 
 export class GuessFaceController {
   constructor() {
