@@ -6,15 +6,7 @@ import {
   getMisplacedFlagIcon,
 } from "./ui/styleHelpers.js";
 
-const columnCount = 20;
-const rowCount = 9;
-
-const boardElem = document.getElementById("board");
-let cellElems = [];
-
-boardElem.style.gridTemplateColumns = `repeat(${columnCount}, 1fr)`;
-
-const cellFills = [
+const CELL_FILLS = [
   getMineIcon(),
   getMisplacedFlagIcon(),
   "🙂",
@@ -29,16 +21,43 @@ const cellFills = [
   getAdjacentMineIcon(8),
 ];
 
-cellElems = randomize();
+const COL_COUNT = 20;
+const ROW_COUNT = 9;
 
+const OPTIONS = {
+  "pressed-nums": {
+    prettyName: "Pressed Numbers",
+    type: "checkbox",
+    changeCallback: (evt) => {
+      for (const cell of cellElems) {
+        togglePressedStyle(cell, evt.target.checked);
+      }
+    },
+    init: () => {
+      const defaultValue = false;
+
+      for (const cell of cellElems) {
+        togglePressedStyle(cell, defaultValue);
+      }
+
+      document.getElementById("pressed-nums").checked = defaultValue;
+    },
+  },
+};
+
+let cellElems = [];
+const boardElem = document.getElementById("board");
+const debugContainer = document.getElementById("debug");
+
+boardElem.style.gridTemplateColumns = `repeat(${COL_COUNT}, 1fr)`;
+
+cellElems = randomize();
 function randomize() {
   const newCellElems = [];
-  for (let idx = 0; idx < columnCount * rowCount; ++idx) {
+  for (let idx = 0; idx < COL_COUNT * ROW_COUNT; ++idx) {
     const cellElem = document.createElement("button");
     cellElem.classList.add("cell");
-    cellElem.innerHTML = getRandomItem(cellFills);
-
-    togglePressedStyle(cellElem, false);
+    cellElem.innerHTML = getRandomItem(CELL_FILLS);
 
     boardElem.append(cellElem);
     newCellElems.push(cellElem);
@@ -47,11 +66,29 @@ function randomize() {
   return newCellElems;
 }
 
-document.getElementById("pressed-nums").addEventListener("change", (evt) => {
-  for (const cell of cellElems) {
-    togglePressedStyle(cell, evt.target.checked);
+initDebugOptions();
+function initDebugOptions() {
+  for (const key in OPTIONS) {
+    const option = OPTIONS[key];
+
+    const labelElem = document.createElement("label");
+    labelElem.append(option.prettyName);
+
+    const inputElem = document.createElement("input");
+    inputElem.id = key;
+    inputElem.name = key;
+    inputElem.type = option.type;
+    inputElem.addEventListener("change", option.changeCallback);
+
+    labelElem.append(inputElem);
+
+    debugContainer.append(labelElem);
+
+    option.init();
   }
-});
+}
+
+/* --- */
 
 function togglePressedStyle(cell, isPressed) {
   const childDiv = cell.querySelector("div");
