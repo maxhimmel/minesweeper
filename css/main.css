@@ -96,7 +96,7 @@ main {
   width: 4dvh;
   height: 4dvh;
   background-color: var(--face-color);
-  font-size: 150%;
+  font-size: 2.75dvh;
   font-weight: bold;
   border: 0.35rem outset var(--border-color);
 }
