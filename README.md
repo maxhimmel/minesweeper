@@ -12,8 +12,7 @@
 
 #### Max Himmel
 
-![Javascript Badge](https://img.shields.io/badge/-javascript-F7DF1E?style=flat&logo=javascript&logoColor=black) ![CSS Badge](https://img.shields.io/badge/-CSS-1572B6?style=flat&logo=css3&logoColor=black)
-![HTML Badge](https://img.shields.io/badge/-HTML-E34F26?style=flat&logo=html5&logoColor=black)
+![Javascript Badge](https://img.shields.io/badge/-JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black) ![CSS Badge](https://img.shields.io/badge/-CSS-1572B6?style=flat&logo=css3&logoColor=black) ![HTML Badge](https://img.shields.io/badge/-HTML-E34F26?style=flat&logo=html5&logoColor=black)
 
 ## :pencil: Description
 
