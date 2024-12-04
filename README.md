@@ -19,9 +19,9 @@ My first exposure to Minesweeper was on my mom's Windows '95 machine. I never kn
  
  | Difficulty | Screenshot | Area | Mines |
  | ---------- | ---------- | ---- | ----- |
- | <h3 align="center">Beginner</h3> | <img src=""> | <div align="center">9 x 9</div> | <div align="center">10</div>
- | <h3 align="center">Intermediate</h3> | <img src=""> | <div align="center">16 x 16</div> | <div align="center">40</div>
- | <h3 align="center">Expert</h3> | <img src=""> | <div align="center">30 x 16 | <div align="center">99</div>
+ | <h3 align="center">Beginner</h3> | <img src="https://i.imgur.com/zrBbU7d.png" width=500px> | <div align="center">9 x 9</div> | <div align="center">10</div>
+ | <h3 align="center">Intermediate</h3> | <img src="https://i.imgur.com/QKogTcn.png" width=500px> | <div align="center">16 x 16</div> | <div align="center">40</div>
+ | <h3 align="center">Expert</h3> | <img src="https://i.imgur.com/2qrOYR7.png" width=500px> | <div align="center">30 x 16 | <div align="center">99</div>
  
 ## :computer: Technologies Used
 
