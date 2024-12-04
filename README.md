@@ -3,7 +3,7 @@
 # MINESWEEPER
 
 <div id="header" align="center">
-  <img src="https://i.imgur.com/BEvoByW.png" width="800" height="400">
+  <img src="https://i.imgur.com/DphzXdG.gif" width="800" height="400">
 </div>
 
 **Created by [Max Himmel](https://www.linkedin.com/in/maxhimmel/)**
