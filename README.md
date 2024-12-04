@@ -13,15 +13,15 @@ Minesweeper is a logic puzzle video game genre generally played on personal comp
 
 My first exposure to Minesweeper was on my mom's Windows '95 machine. I never knew what I was doing, but I enjoyed clicking the cells randomly and watching the board flood. It wasn't until some time after college that I learned to play the game properly.
 
-Be careful. It gets addicting.
+**Be careful.** It gets addicting.
 
 ## :bomb: Difficulties
  
  | Difficulty | Screenshot | Area | Mines |
  | ---------- | ---------- | ---- | ----- |
- | <h3 align="center">Beginner</h3> | <img src=""> | 9 x 9 | 10
- | <h3 align="center">Intermediate</h3> | <img src=""> | 16 x 16 | 40
- | <h3 align="center">Expert</h3> | <img src=""> | 30 x 16 | 99
+ | <h3 align="center">Beginner</h3> | <img src=""> | <div align="center">9 x 9</div> | <div align="center">10</div>
+ | <h3 align="center">Intermediate</h3> | <img src=""> | <div align="center">16 x 16</div> | <div align="center">40</div>
+ | <h3 align="center">Expert</h3> | <img src=""> | <div align="center">30 x 16 | <div align="center">99</div>
  
 ## :computer: Technologies Used
 
