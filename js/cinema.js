@@ -34,7 +34,7 @@ const OPTIONS = {
       }
     },
     init: () => {
-      const defaultValue = false;
+      const defaultValue = true;
 
       for (const cell of cellElems) {
         togglePressedStyle(cell, defaultValue);
@@ -51,7 +51,7 @@ const OPTIONS = {
       randomAnimateCells(evt.target.value);
     },
     init: () => {
-      const defaultValue = 10;
+      const defaultValue = 70;
 
       randomAnimateCells(defaultValue);
 
