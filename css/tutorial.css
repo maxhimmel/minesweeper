@@ -69,15 +69,15 @@
 /* --- */
 
 .mine-text {
-  animation: mine-text 2s linear 0s infinite alternate;
+  animation: mine-text 2s ease-in-out 0s infinite alternate;
 }
 
 @keyframes mine-text {
   from {
-    color: red;
+    color: black;
   }
 
   to {
-    color: darkred;
+    color: red;
   }
 }
