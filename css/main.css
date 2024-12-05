@@ -233,7 +233,7 @@ nav > menu {
 }
 
 .popout *:not(.tab) {
-  overflow: hidden;
+  overflow: clip;
 }
 
 .tab {
