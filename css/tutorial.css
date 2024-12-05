@@ -64,6 +64,12 @@
 
 /* --- */
 
+.verb {
+  font-style: italic;
+}
+
+/* --- */
+
 .number-text {
   animation: numbers-colorful 8s linear 0s infinite alternate;
 }
