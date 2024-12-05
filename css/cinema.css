@@ -17,3 +17,15 @@
 #board-overlay > .cell {
   transition: opacity 250ms ease-in-out;
 }
+
+#debug {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+body {
+  gap: 2rem;
+}
