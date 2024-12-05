@@ -1,4 +1,5 @@
 #tutorial-container {
+  /* max-height: 478px; */
   max-height: 300px;
   overflow-y: auto;
   padding-right: 0.5rem;
