@@ -25,6 +25,15 @@
   --highlight-color: whitesmoke;
   --tab-width: 110px;
   --popup-max-width: 500px;
+
+  --m1-color: dodgerblue;
+  --m2-color: forestgreen;
+  --m3-color: crimson;
+  --m4-color: darkorchid;
+  --m5-color: chocolate;
+  --m6-color: teal;
+  --m7-color: black;
+  --m8-color: grey;
 }
 
 .ignore-mouse {
@@ -130,28 +139,28 @@ input[type="radio"]:checked + label {
 }
 
 .mine-1 {
-  color: dodgerblue;
+  color: var(--m1-color);
 }
 .mine-2 {
-  color: forestgreen;
+  color: var(--m2-color);
 }
 .mine-3 {
-  color: crimson;
+  color: var(--m3-color);
 }
 .mine-4 {
-  color: darkorchid;
+  color: var(--m4-color);
 }
 .mine-5 {
-  color: chocolate;
+  color: var(--m5-color);
 }
 .mine-6 {
-  color: teal;
+  color: var(--m6-color);
 }
 .mine-7 {
-  color: black;
+  color: var(--m7-color);
 }
 .mine-8 {
-  color: grey;
+  color: var(--m8-color);
 }
 
 /* --- */
