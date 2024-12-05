@@ -25,6 +25,15 @@
   --highlight-color: whitesmoke;
   --tab-width: 110px;
   --popup-max-width: 500px;
+
+  --m1-color: dodgerblue;
+  --m2-color: forestgreen;
+  --m3-color: crimson;
+  --m4-color: darkorchid;
+  --m5-color: chocolate;
+  --m6-color: teal;
+  --m7-color: black;
+  --m8-color: grey;
 }
 
 .ignore-mouse {
@@ -130,28 +139,28 @@ input[type="radio"]:checked + label {
 }
 
 .mine-1 {
-  color: dodgerblue;
+  color: var(--m1-color);
 }
 .mine-2 {
-  color: forestgreen;
+  color: var(--m2-color);
 }
 .mine-3 {
-  color: crimson;
+  color: var(--m3-color);
 }
 .mine-4 {
-  color: darkorchid;
+  color: var(--m4-color);
 }
 .mine-5 {
-  color: chocolate;
+  color: var(--m5-color);
 }
 .mine-6 {
-  color: teal;
+  color: var(--m6-color);
 }
 .mine-7 {
-  color: black;
+  color: var(--m7-color);
 }
 .mine-8 {
-  color: grey;
+  color: var(--m8-color);
 }
 
 /* --- */
@@ -190,6 +199,7 @@ nav > menu {
   right: 0;
   display: flex;
   align-items: start;
+  pointer-events: none;
 }
 
 .popout {
@@ -197,6 +207,8 @@ nav > menu {
   background-color: var(--face-color);
   border: 0.5rem groove var(--border-color);
   border-top-width: 0;
+
+  pointer-events: all;
 
   transform: translateY(-100%);
 
@@ -206,6 +218,7 @@ nav > menu {
 
   white-space: nowrap;
   max-width: var(--tab-width);
+  min-width: var(--tab-width);
 
   /* transition-duration: 300ms;
   transition-timing-function: cubic-bezier(0.47, 1.64, 0.41, 0.8); */
@@ -239,9 +252,15 @@ nav > menu {
 .popout:has(.tab + input:checked) {
   transform: translateY(0);
   max-width: var(--popup-max-width);
+  white-space: wrap;
+  transition: all 150ms, max-width 0s;
 }
 
 /* .popout:has(.tab + input:checked), */
 .popout:has(.tab + input:checked) > label {
   background-color: var(--highlight-color);
+}
+
+.popout > p:has(+ p) {
+  margin-bottom: 1rem;
 }

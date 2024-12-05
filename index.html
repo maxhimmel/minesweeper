@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/icons.css" />
     <link rel="stylesheet" href="css/patterns.css" />
+    <link rel="stylesheet" href="css/tutorial.css" />
 
     <script defer src="js/app.js" type="module"></script>
   </head>
@@ -18,14 +19,87 @@
       <div class="nav-bar-top"></div>
       <div class="nav-bar-bottom"></div>
       <menu>
-        <label for="controls" class="popout">
-          <ul>
-            <li>- <strong>alt/option + click:</strong> flag</li>
-            <li>- <strong>shift + click:</strong> chording</li>
-          </ul>
+        <label for="rules" class="popout">
+          <p>
+            Minesweeper is a game where
+            <span class="mine-text">mines</span> are hidden in a grid of
+            squares.
+          </p>
+          <p>
+            Safe squares have <span class="number-text">numbers</span> telling
+            you how many <span class="mine-text">mines</span> touch the square.
+          </p>
+          <p>
+            You can use the <span class="number-text">number clues</span> to
+            solve the game by opening all of the safe squares.
+          </p>
+          <p>
+            If you click on a <span class="mine-text">mine</span> you lose the
+            game!
+          </p>
 
-          <label class="tab" for="controls">controls</label>
-          <input type="checkbox" id="controls" name="controls" hidden />
+          <label class="tab" for="rules">rules</label>
+          <input type="checkbox" id="rules" name="rules" hidden />
+        </label>
+
+        <label for="manual" class="popout">
+          <section id="tutorial-container">
+            <div class="header-break"><div class="badge">1</div></div>
+            <article class="tutorial-page">
+              <p>
+                Open squares by <span class="verb">clicking</span> the left
+                mouse button.
+              </p>
+              <img
+                src="https://i.imgur.com/quyckbl.gif"
+                referrerpolicy="no-referrer"
+              />
+            </article>
+
+            <div class="header-break"><div class="badge">2</div></div>
+            <article class="tutorial-page">
+              <p>
+                Place flags on mines by
+                <span class="verb">holding</span> alt/option and
+                <span class="verb">clicking</span> the left mouse button.
+              </p>
+              <img
+                src="https://i.imgur.com/ztyv08z.gif"
+                referrerpolicy="no-referrer"
+              />
+            </article>
+
+            <div class="header-break"><div class="badge">3</div></div>
+            <article class="tutorial-page">
+              <p>
+                If you flag all of the mines touching a number, chording on the
+                number opens the remaining squares.
+              </p>
+              <p>
+                Chord a cell by <span class="verb">holding</span> shift and
+                <span class="verb">clicking</span> the left mouse button.
+              </p>
+              <p>This can save you a lot of work!</p>
+              <img
+                src="https://i.imgur.com/uDdileV.gif"
+                referrerpolicy="no-referrer"
+              />
+            </article>
+
+            <div class="header-break"><div class="badge">4</div></div>
+            <article class="tutorial-page">
+              <p>
+                However, if you place the correct number of flags on the wrong
+                squares, chording will explode the mines.
+              </p>
+              <img
+                src="https://i.imgur.com/MN6LYsc.gif"
+                referrerpolicy="no-referrer"
+              />
+            </article>
+          </section>
+          <label class="tab" for="manual">manual</label>
+          <input type="checkbox" id="manual" name="manual" hidden />
         </label>
 
         <label for="cheats" class="popout">

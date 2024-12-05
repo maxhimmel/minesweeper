@@ -42,6 +42,8 @@ My first exposure to Minesweeper was on my mom's Windows '95 machine. I never kn
  
 2. [Sprite Sheet](https://www.spriters-resource.com/pc_computer/minesweeper/)
 
+3. [Tutorial & Manual](https://minesweepergame.com/strategy/how-to-play-minesweeper.php)
+
 </details>
 
 <details open>
