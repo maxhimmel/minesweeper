@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/icons.css" />
     <link rel="stylesheet" href="css/patterns.css" />
+    <link rel="stylesheet" href="css/tutorial.css" />
 
     <script defer src="js/app.js" type="module"></script>
   </head>
@@ -18,6 +19,29 @@
       <div class="nav-bar-top"></div>
       <div class="nav-bar-bottom"></div>
       <menu>
+        <label for="rules" class="popout">
+          <p>
+            Minesweeper is a game where
+            <span class="mine-text">mines</span> are hidden in a grid of
+            squares.
+          </p>
+          <p>
+            Safe squares have <span class="number-text">numbers</span> telling
+            you how many <span class="mine-text">mines</span> touch the square.
+          </p>
+          <p>
+            You can use the <span class="number-text">number clues</span> to
+            solve the game by opening all of the safe squares.
+          </p>
+          <p>
+            If you click on a <span class="mine-text">mine</span> you lose the
+            game!
+          </p>
+
+          <label class="tab" for="rules">rules</label>
+          <input type="checkbox" id="rules" name="rules" hidden />
+        </label>
+
         <label for="controls" class="popout">
           <ul>
             <li>- <strong>alt/option + click:</strong> flag</li>

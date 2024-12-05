@@ -248,9 +248,15 @@ nav > menu {
 .popout:has(.tab + input:checked) {
   transform: translateY(0);
   max-width: var(--popup-max-width);
+  white-space: wrap;
+  transition: all 150ms, max-width 0s;
 }
 
 /* .popout:has(.tab + input:checked), */
 .popout:has(.tab + input:checked) > label {
   background-color: var(--highlight-color);
+}
+
+.popout > p:has(+ p) {
+  margin-bottom: 1rem;
 }

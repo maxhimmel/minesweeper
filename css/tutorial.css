@@ -1,0 +1,83 @@
+.number-text {
+  animation: numbers-colorful 8s linear 0s infinite alternate;
+}
+
+@keyframes numbers-colorful {
+  0% {
+    color: var(--m1-color);
+  }
+
+  20% {
+    color: var(--m2-color);
+  }
+
+  40% {
+    color: var(--m3-color);
+  }
+
+  60% {
+    color: var(--m4-color);
+  }
+
+  80% {
+    color: var(--m5-color);
+  }
+
+  100% {
+    color: var(--m6-color);
+  }
+}
+
+@keyframes numbers-full {
+  0% {
+    color: var(--m1-color);
+  }
+
+  12.5% {
+    color: var(--m2-color);
+  }
+
+  25% {
+    color: var(--m3-color);
+  }
+
+  37.5% {
+    color: var(--m4-color);
+  }
+
+  50% {
+    color: var(--m5-color);
+  }
+
+  62.5% {
+    color: var(--m6-color);
+  }
+
+  75% {
+    color: var(--m7-color);
+  }
+
+  87.5% {
+    color: var(--m8-color);
+  }
+
+  100% {
+    color: var(--m1-color);
+  }
+}
+
+/* --- */
+
+.mine-text {
+  animation: mine-text 2s linear 0s infinite alternate;
+}
+
+@keyframes mine-text {
+  from {
+    color: red;
+  }
+
+  to {
+    color: darkred;
+  }
+}
