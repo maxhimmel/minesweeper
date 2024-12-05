@@ -96,6 +96,9 @@ const OPTIONS = {
     type: "number",
     changeCallback: (evt) => {
       animSpeed = evt.target.value;
+
+      const animType = document.getElementById("anim-type").value;
+      ANIMATIONS[animType]();
     },
     init: () => {
       const defaultValue = 100;
@@ -129,12 +132,12 @@ const OPTIONS = {
     min: -4,
     max: 4,
     changeCallback: (evt) => {
-      direction.col = parseInt(evt.target.value);
+      waveDirection.col = parseInt(evt.target.value);
     },
     init: () => {
       const defaultValue = -1;
 
-      direction.col = defaultValue;
+      waveDirection.col = defaultValue;
 
       document.getElementById("wave-horizontal").value = defaultValue;
     },
@@ -146,12 +149,12 @@ const OPTIONS = {
     min: -4,
     max: 4,
     changeCallback: (evt) => {
-      direction.row = parseInt(evt.target.value);
+      waveDirection.row = parseInt(evt.target.value);
     },
     init: () => {
       const defaultValue = -1;
 
-      direction.row = defaultValue;
+      waveDirection.row = defaultValue;
 
       document.getElementById("wave-vertical").value = defaultValue;
     },
@@ -163,29 +166,29 @@ const OPTIONS = {
     min: 0,
     max: COL_COUNT - 1,
     changeCallback: (evt) => {
-      range.cols = parseInt(evt.target.value);
+      waveRange.cols = parseInt(evt.target.value);
     },
     init: () => {
       const defaultValue = 8;
 
-      range.cols = defaultValue;
+      waveRange.cols = defaultValue;
 
       document.getElementById("wave-width").value = defaultValue;
     },
   },
 
   "wave-height": {
-    prettyName: "Wave Width",
+    prettyName: "Wave Height",
     type: "range",
     min: 0,
     max: ROW_COUNT - 1,
     changeCallback: (evt) => {
-      range.rows = parseInt(evt.target.value);
+      waveRange.rows = parseInt(evt.target.value);
     },
     init: () => {
       const defaultValue = 8;
 
-      range.rows = defaultValue;
+      waveRange.rows = defaultValue;
 
       document.getElementById("wave-height").value = defaultValue;
     },
@@ -197,11 +200,15 @@ let overlayCellElems = [];
 let animateCellHandle = null;
 let applyPressedToAllCells = false;
 let animSpeed = 100;
-const range = {
+const waveCoord = {
+  col: 0,
+  row: 0,
+};
+const waveRange = {
   cols: 8,
   rows: 8,
 };
-const direction = {
+const waveDirection = {
   col: 1,
   row: -1,
 };
@@ -324,22 +331,17 @@ function randomAnimateCells() {
 function waveAnimateCells() {
   clearInterval(animateCellHandle);
 
-  let coord = {
-    col: 0,
-    row: 0,
-  };
-
   animateCellHandle = setInterval(() => {
     const wave = new Map();
 
-    for (let colCounter = 0; colCounter <= range.cols; ++colCounter) {
-      for (let rowCounter = 0; rowCounter <= range.rows; ++rowCounter) {
-        const waveCoord = {
-          col: modulo(coord.col + colCounter, COL_COUNT),
-          row: modulo(coord.row + rowCounter, ROW_COUNT),
+    for (let colCounter = 0; colCounter <= waveRange.cols; ++colCounter) {
+      for (let rowCounter = 0; rowCounter <= waveRange.rows; ++rowCounter) {
+        const coord = {
+          col: modulo(waveCoord.col + colCounter, COL_COUNT),
+          row: modulo(waveCoord.row + rowCounter, ROW_COUNT),
         };
 
-        const waveIndex = navigator.getCellIndex(waveCoord.col, waveCoord.row);
+        const waveIndex = navigator.getCellIndex(coord.col, coord.row);
         wave.set(waveIndex, waveIndex);
       }
     }
@@ -351,7 +353,7 @@ function waveAnimateCells() {
       overlayCell.style.opacity = hideOverlay ? 0 : 100;
     }
 
-    coord.col = modulo(coord.col + direction.col, COL_COUNT);
-    coord.row = modulo(coord.row + direction.row, ROW_COUNT);
+    waveCoord.col = modulo(waveCoord.col + waveDirection.col, COL_COUNT);
+    waveCoord.row = modulo(waveCoord.row + waveDirection.row, ROW_COUNT);
   }, animSpeed);
 }
