@@ -106,7 +106,7 @@ const OPTIONS = {
   },
 
   "anim-type": {
-    prettyName: "Animation Speed",
+    prettyName: "Animation Type",
     type: "select",
     options: Object.keys(ANIMATIONS),
     changeCallback: (evt) => {
@@ -122,6 +122,74 @@ const OPTIONS = {
       document.getElementById("anim-type").value = defaultValue;
     },
   },
+
+  "wave-horizontal": {
+    prettyName: "Wave Horizontal Speed",
+    type: "range",
+    min: -4,
+    max: 4,
+    changeCallback: (evt) => {
+      direction.col = parseInt(evt.target.value);
+    },
+    init: () => {
+      const defaultValue = -1;
+
+      direction.col = defaultValue;
+
+      document.getElementById("wave-horizontal").value = defaultValue;
+    },
+  },
+
+  "wave-vertical": {
+    prettyName: "Wave Vertical Speed",
+    type: "range",
+    min: -4,
+    max: 4,
+    changeCallback: (evt) => {
+      direction.row = parseInt(evt.target.value);
+    },
+    init: () => {
+      const defaultValue = -1;
+
+      direction.row = defaultValue;
+
+      document.getElementById("wave-vertical").value = defaultValue;
+    },
+  },
+
+  "wave-width": {
+    prettyName: "Wave Width",
+    type: "range",
+    min: 0,
+    max: COL_COUNT - 1,
+    changeCallback: (evt) => {
+      range.cols = parseInt(evt.target.value);
+    },
+    init: () => {
+      const defaultValue = 8;
+
+      range.cols = defaultValue;
+
+      document.getElementById("wave-width").value = defaultValue;
+    },
+  },
+
+  "wave-height": {
+    prettyName: "Wave Width",
+    type: "range",
+    min: 0,
+    max: ROW_COUNT - 1,
+    changeCallback: (evt) => {
+      range.rows = parseInt(evt.target.value);
+    },
+    init: () => {
+      const defaultValue = 8;
+
+      range.rows = defaultValue;
+
+      document.getElementById("wave-height").value = defaultValue;
+    },
+  },
 };
 
 let cellElems = [];
@@ -129,6 +197,14 @@ let overlayCellElems = [];
 let animateCellHandle = null;
 let applyPressedToAllCells = false;
 let animSpeed = 100;
+const range = {
+  cols: 8,
+  rows: 8,
+};
+const direction = {
+  col: 1,
+  row: -1,
+};
 const boardElem = document.getElementById("board");
 const overlayElem = document.getElementById("board-overlay");
 const debugContainer = document.getElementById("debug");
@@ -195,7 +271,12 @@ function initDebugOptions() {
       inputElem.name = key;
       inputElem.type = option.type;
       inputElem.style.backgroundColor = "wheat";
-      inputElem.addEventListener("change", option.changeCallback);
+      inputElem.addEventListener("input", option.changeCallback);
+    }
+
+    if (option.type === "range") {
+      inputElem.min = option.min;
+      inputElem.max = option.max;
     }
 
     labelElem.append(inputElem);
@@ -246,14 +327,6 @@ function waveAnimateCells() {
   let coord = {
     col: 0,
     row: 0,
-  };
-  let range = {
-    cols: 8,
-    rows: 8,
-  };
-  let direction = {
-    col: 1,
-    row: -1,
   };
 
   animateCellHandle = setInterval(() => {
