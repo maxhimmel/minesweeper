@@ -1,4 +1,5 @@
 import { BoardNavigator } from "./data/boardNavigator.js";
+import { modulo } from "./lib/mathHelpers.js";
 import { getRandomItem } from "./lib/randomHelpers.js";
 import {
   getAdjacentMineIcon,
@@ -25,6 +26,11 @@ const CELL_FILLS = [
 const COL_COUNT = 20;
 const ROW_COUNT = 9;
 
+const ANIMATIONS = {
+  randomAnimateCells,
+  waveAnimateCells,
+};
+
 const OPTIONS = {
   "show-overlay": {
     prettyName: "Show Overlay",
@@ -33,7 +39,7 @@ const OPTIONS = {
       showOverlay(evt.target.checked);
     },
     init: () => {
-      const defaultValue = false;
+      const defaultValue = true;
 
       showOverlay(defaultValue);
 
@@ -71,7 +77,10 @@ const OPTIONS = {
       }
     },
     init: () => {
-      const defaultValue = true;
+      const defaultValue = false;
+      if (!defaultValue) {
+        return;
+      }
 
       applyPressedToAllCells = defaultValue;
       for (const cell of cellElems) {
@@ -86,14 +95,31 @@ const OPTIONS = {
     prettyName: "Animation Speed",
     type: "number",
     changeCallback: (evt) => {
-      waveAnimateCells(evt.target.value);
+      animSpeed = evt.target.value;
     },
     init: () => {
-      const defaultValue = 70;
-
-      waveAnimateCells(defaultValue);
+      const defaultValue = 100;
+      animSpeed = defaultValue;
 
       document.getElementById("anim-speed").value = defaultValue;
+    },
+  },
+
+  "anim-type": {
+    prettyName: "Animation Speed",
+    type: "select",
+    options: Object.keys(ANIMATIONS),
+    changeCallback: (evt) => {
+      const animName = evt.target.value;
+
+      ANIMATIONS[animName]();
+    },
+    init: () => {
+      const defaultValue = "waveAnimateCells";
+
+      ANIMATIONS[defaultValue]();
+
+      document.getElementById("anim-type").value = defaultValue;
     },
   },
 };
@@ -102,6 +128,7 @@ let cellElems = [];
 let overlayCellElems = [];
 let animateCellHandle = null;
 let applyPressedToAllCells = false;
+let animSpeed = 100;
 const boardElem = document.getElementById("board");
 const overlayElem = document.getElementById("board-overlay");
 const debugContainer = document.getElementById("debug");
@@ -147,12 +174,29 @@ function initDebugOptions() {
     labelElem.style.gap = "0.75rem";
     labelElem.append(option.prettyName);
 
-    const inputElem = document.createElement("input");
-    inputElem.id = key;
-    inputElem.name = key;
-    inputElem.type = option.type;
-    inputElem.style.backgroundColor = "wheat";
-    inputElem.addEventListener("change", option.changeCallback);
+    let inputElem = null;
+
+    if (option.type === "select") {
+      inputElem = document.createElement("select");
+      inputElem.id = key;
+      inputElem.name = key;
+      inputElem.style.backgroundColor = "wheat";
+      inputElem.addEventListener("change", option.changeCallback);
+
+      for (const o of option.options) {
+        const optionElem = document.createElement("option");
+        optionElem.value = o;
+        optionElem.innerText = o;
+        inputElem.append(optionElem);
+      }
+    } else {
+      inputElem = document.createElement("input");
+      inputElem.id = key;
+      inputElem.name = key;
+      inputElem.type = option.type;
+      inputElem.style.backgroundColor = "wheat";
+      inputElem.addEventListener("change", option.changeCallback);
+    }
 
     labelElem.append(inputElem);
 
@@ -182,25 +226,59 @@ function togglePressedStyle(cell, isPressed, updateAll = false) {
   }
 }
 
-function randomAnimateCells(speed) {
+function randomAnimateCells() {
   clearInterval(animateCellHandle);
 
   animateCellHandle = setInterval(() => {
     const randOverlayCell = getRandomItem(overlayCellElems);
-    const visibility = randOverlayCell.style.visibility;
 
-    randOverlayCell.style.visibility =
-      visibility === "hidden" ? "visible" : "hidden";
-
+    // const visibility = randOverlayCell.style.visibility;
     // randOverlayCell.style.visibility =
-    //   Math.random() > 0.5 ? "visible" : "hidden";
-  }, speed);
+    //   visibility === "hidden" ? "visible" : "hidden";
+
+    randOverlayCell.style.opacity = Math.random() > 0.5 ? 100 : 0;
+  }, animSpeed);
 }
 
-function waveAnimateCells(speed) {
+function waveAnimateCells() {
   clearInterval(animateCellHandle);
 
+  let coord = {
+    col: 0,
+    row: 0,
+  };
+  let range = {
+    cols: 8,
+    rows: 8,
+  };
+  let direction = {
+    col: 1,
+    row: -1,
+  };
+
   animateCellHandle = setInterval(() => {
-    for (let idx = 0; idx < navigator.length; ++idx) {}
-  }, speed);
+    const wave = new Map();
+
+    for (let colCounter = 0; colCounter <= range.cols; ++colCounter) {
+      for (let rowCounter = 0; rowCounter <= range.rows; ++rowCounter) {
+        const waveCoord = {
+          col: modulo(coord.col + colCounter, COL_COUNT),
+          row: modulo(coord.row + rowCounter, ROW_COUNT),
+        };
+
+        const waveIndex = navigator.getCellIndex(waveCoord.col, waveCoord.row);
+        wave.set(waveIndex, waveIndex);
+      }
+    }
+
+    for (let idx = 0; idx < navigator.length; ++idx) {
+      const hideOverlay = wave.has(idx);
+
+      const overlayCell = overlayCellElems[idx];
+      overlayCell.style.opacity = hideOverlay ? 0 : 100;
+    }
+
+    coord.col = modulo(coord.col + direction.col, COL_COUNT);
+    coord.row = modulo(coord.row + direction.row, ROW_COUNT);
+  }, animSpeed);
 }
