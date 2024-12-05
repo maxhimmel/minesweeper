@@ -195,8 +195,8 @@ const OPTIONS = {
   },
 };
 
-let cellElems = [];
-let overlayCellElems = [];
+const cellElems = [];
+const overlayCellElems = [];
 let animateCellHandle = null;
 let applyPressedToAllCells = false;
 let animSpeed = 100;
@@ -220,19 +220,16 @@ const navigator = new BoardNavigator(COL_COUNT, ROW_COUNT);
 boardElem.style.gridTemplateColumns = `repeat(${COL_COUNT}, 1fr)`;
 overlayElem.style.gridTemplateColumns = `repeat(${COL_COUNT}, 1fr)`;
 
-cellElems = randomize();
-function randomize() {
-  const newCellElems = [];
+initFillCells();
+function initFillCells() {
   for (let idx = 0; idx < COL_COUNT * ROW_COUNT; ++idx) {
     const cellElem = document.createElement("button");
     cellElem.classList.add("cell");
     cellElem.innerHTML = getRandomItem(CELL_FILLS);
 
     boardElem.append(cellElem);
-    newCellElems.push(cellElem);
+    cellElems.push(cellElem);
   }
-
-  return newCellElems;
 }
 
 initOverlay();
