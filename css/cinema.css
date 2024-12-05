@@ -13,3 +13,7 @@
 .container {
   position: relative;
 }
+
+#board-overlay > .cell {
+  transition: opacity 250ms ease-in-out;
+}
