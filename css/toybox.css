@@ -1,0 +1,31 @@
+#board {
+  position: relative;
+}
+
+#board-overlay {
+  position: absolute;
+  inset: -0.5rem;
+
+  display: grid;
+  border: 0.5rem inset var(--border-color);
+}
+
+.container {
+  position: relative;
+}
+
+#board-overlay > .cell {
+  transition: opacity 250ms ease-in-out;
+}
+
+#debug {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+body {
+  gap: 2rem;
+}
