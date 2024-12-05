@@ -215,6 +215,7 @@ nav > menu {
 
   white-space: nowrap;
   max-width: var(--tab-width);
+  min-width: var(--tab-width);
 
   /* transition-duration: 300ms;
   transition-timing-function: cubic-bezier(0.47, 1.64, 0.41, 0.8); */
