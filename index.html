@@ -42,8 +42,58 @@
           <input type="checkbox" id="rules" name="rules" hidden />
         </label>
 
+        <label for="manual" class="popout">
+          <section id="tutorial-container">
+            <div class="header-break"><div class="badge">1</div></div>
+            <article class="tutorial-page">
+              <p>You open squares with the left mouse button.</p>
+              <img
+                src="https://minesweepergame.com/image/strategy/pattern-1.png"
+              />
+            </article>
+
+            <div class="header-break"><div class="badge">2</div></div>
+            <article class="tutorial-page">
+              <p>
+                You put flags on mines by holding alt/option and clicking the
+                left mouse button.
+              </p>
+              <img
+                src="https://minesweepergame.com/image/strategy/pattern-1.png"
+              />
+            </article>
+
+            <div class="header-break"><div class="badge">3</div></div>
+            <article class="tutorial-page">
+              <p>
+                If you flag all of the mines touching a number, chording on the
+                number opens the remaining squares. Chording is when you hold
+                shift and left click the mouse button. This can save you a lot
+                of work!
+              </p>
+              <img
+                src="https://minesweepergame.com/image/strategy/pattern-1.png"
+              />
+            </article>
+
+            <div class="header-break"><div class="badge">4</div></div>
+            <article class="tutorial-page">
+              <p>
+                However, if you place the correct number of flags on the wrong
+                squares, chording will explode the mines.
+              </p>
+              <img
+                src="https://minesweepergame.com/image/strategy/pattern-1.png"
+              />
+            </article>
+          </section>
+          <label class="tab" for="manual">manual</label>
+          <input type="checkbox" id="manual" name="manual" hidden />
+        </label>
+
         <label for="controls" class="popout">
           <ul>
+            <li>- <strong>click:</strong> open cell</li>
             <li>- <strong>alt/option + click:</strong> flag</li>
             <li>- <strong>shift + click:</strong> chording</li>
           </ul>

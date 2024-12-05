@@ -1,3 +1,67 @@
+#tutorial-container {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.tutorial-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: 250px;
+}
+
+.tutorial-page img {
+  width: 200px;
+}
+
+.header-break {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.5rem;
+
+  /* position: sticky;
+  top: 0; */
+}
+.header-break:not(:first-child) {
+  margin-top: 3rem;
+}
+
+.header-break::after,
+.header-break::before {
+  content: "";
+  width: 100%;
+  /* height: 0.25rem; */
+  /* background-color: grey; */
+  border-top: 0.25rem dashed grey;
+}
+
+.badge {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--border-color);
+  border-radius: 50%;
+  min-width: 2rem;
+  min-height: 2rem;
+  margin: 0 0.5rem;
+}
+
+#tutorial-container::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 0.5rem;
+}
+#tutorial-container::-webkit-scrollbar-thumb {
+  background-color: grey;
+}
+#tutorial-container::-webkit-scrollbar-track {
+  background-color: var(--border-color);
+}
+
+/* --- */
+
 .number-text {
   animation: numbers-colorful 8s linear 0s infinite alternate;
 }
