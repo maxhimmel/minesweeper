@@ -50,13 +50,14 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 3rem;
-  padding-bottom: 2rem;
   background-color: var(--face-color);
+
+  height: 100vh;
 }
 
 main {
-  margin-top: 1.5rem;
+  margin-top: 4.5rem;
+  padding-bottom: 2rem;
   position: relative;
 }
 
