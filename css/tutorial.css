@@ -21,6 +21,10 @@
   padding-bottom: 1.5rem;
 }
 
+#tutorial-container > section:is(:last-child) > .tutorial-page {
+  padding-bottom: 0.5rem;
+}
+
 .tutorial-page img {
   width: 200px;
   border: 0.5rem inset var(--border-color);
