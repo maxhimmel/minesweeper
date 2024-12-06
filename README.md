@@ -8,7 +8,7 @@
 
 **Created by [Max Himmel](https://www.linkedin.com/in/maxhimmel/)**
 
-#### <a href="https://maxhimmel.github.io/ga-minesweeper" target="_blank">PLAY HERE</a>
+#### [PLAY HERE](https://maxhimmel.github.io/ga-minesweeper)
 
 </div>
 
