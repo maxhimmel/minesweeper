@@ -3,6 +3,12 @@
   max-height: 300px;
   overflow-y: auto;
   padding-right: 0.5rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
 }
 
 .tutorial-page {
@@ -12,6 +18,7 @@
   text-align: center;
   gap: 1rem;
   max-width: 250px;
+  padding-bottom: 1.5rem;
 }
 
 .tutorial-page img {
@@ -36,9 +43,6 @@
 
   position: sticky;
   top: 0;
-}
-.header-break:not(:first-child) {
-  margin-top: 3rem;
 }
 
 .header-break::after,
