@@ -29,3 +29,8 @@
 body {
   gap: 2rem;
 }
+
+a {
+  background-color: white;
+  padding: 0.5rem;
+}
