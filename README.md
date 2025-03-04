@@ -49,7 +49,7 @@ My first exposure to Minesweeper was on my mom's Windows '95 machine. I never kn
 <details open>
 <summary>Deployed Link</summary>
 
-- [https://maxhimmel.github.io/ga-minesweeper](https://maxhimmel.github.io/ga-minesweeper)
+- [https://maxhimmel.github.io/ga-minesweeper](https://maxhimmel.github.io/minesweeper)
 </details>
 
 ## :fast_forward: Upcoming Features
