@@ -8,7 +8,7 @@
 
 **Created by [Max Himmel](https://www.linkedin.com/in/maxhimmel/)**
 
-#### [PLAY HERE](https://maxhimmel.github.io/ga-minesweeper)
+#### [PLAY HERE](https://maxhimmel.github.io/minesweeper)
 
 </div>
 
@@ -49,7 +49,7 @@ My first exposure to Minesweeper was on my mom's Windows '95 machine. I never kn
 <details open>
 <summary>Deployed Link</summary>
 
-- [https://maxhimmel.github.io/ga-minesweeper](https://maxhimmel.github.io/minesweeper)
+- [https://maxhimmel.github.io/minesweeper](https://maxhimmel.github.io/minesweeper)
 </details>
 
 ## :fast_forward: Upcoming Features
